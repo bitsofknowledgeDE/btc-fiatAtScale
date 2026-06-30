@@ -6,6 +6,24 @@ publish = "dist"
 NODE_VERSION = "20"
 
 [[redirects]]
+from = "https://www.fiatatscale.com/*"
+to = "https://fiatatscale.com/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "http://www.fiatatscale.com/*"
+to = "https://fiatatscale.com/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "http://fiatatscale.com/*"
+to = "https://fiatatscale.com/:splat"
+status = 301
+force = true
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
