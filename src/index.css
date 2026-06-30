@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    @apply bg-bok-bg text-midnight-100 font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: rgba(247, 147, 26, 0.25);
+    color: #f8fafc;
+  }
+}
+
+@layer components {
+  .spectrum-bar {
+    background: linear-gradient(135deg, #E91E8C 0%, #7C3AED 35%, #06B6D4 70%, #10B981 100%);
+  }
+
+  .glass-card,
+  .bok-card {
+    @apply bg-bok-surface border border-bok-border rounded-2xl;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  }
+
+  .glass-nav,
+  .bok-header-shell {
+    @apply bg-bok-surface/95 backdrop-blur-xl border-b border-bok-border;
+  }
+
+  .section-kicker {
+    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-bok-muted mb-3 flex items-center gap-2;
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  }
+
+  .section-kicker-num {
+    @apply text-btc-orange tabular-nums;
+  }
+
+  .gradient-text-bitcoin {
+    @apply text-btc-orange;
+  }
+
+  .gradient-text-fiat {
+    @apply text-fiat-400;
+  }
+
+  .section-shell {
+    @apply py-20 sm:py-28 px-4;
+  }
+
+  .section-heading {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-none mb-4 font-display;
+  }
+
+  .section-subtext {
+    @apply text-bok-muted text-base sm:text-lg leading-relaxed;
+  }
+
+  .data-metric {
+    @apply text-2xl sm:text-3xl font-mono font-bold tracking-tight;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center px-5 py-2.5 rounded-full bg-btc-orange text-white text-sm font-semibold transition-all duration-200 hover:brightness-110 active:scale-[0.98];
+    box-shadow: 0 2px 10px rgba(247, 147, 26, 0.35);
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center px-5 py-2.5 rounded-full border border-bok-border bg-midnight-900 text-midnight-200 text-sm font-medium transition-all duration-200 hover:bg-midnight-800 active:scale-[0.98];
+  }
+
+  .pill-button {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.98];
+  }
+
+  .pill-button-active {
+    @apply bg-midnight-800 text-midnight-50 border border-bok-border;
+  }
+
+  .pill-button-inactive {
+    @apply text-bok-muted hover:text-midnight-200 hover:bg-midnight-900/80;
+  }
+
+  .compare-cell {
+    @apply p-4 sm:p-5 rounded-2xl border border-bok-border transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.recharts-tooltip-wrapper {
+  outline: none !important;
+}
