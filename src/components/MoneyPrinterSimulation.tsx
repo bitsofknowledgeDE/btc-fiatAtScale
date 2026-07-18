@@ -140,13 +140,13 @@ function useEmissionCanvas(inView: boolean, config: CanvasEmissionConfig) {
         ctx.fillRect(bx - 6, by - 6, bw + 12, bh + 12);
       }
 
-      ctx.fillStyle = '#1e3a5f';
+      ctx.fillStyle = '#E2E8F0';
       ctx.fillRect(bx, by, bw, bh);
-      ctx.strokeStyle = vis.relative > 0.5 ? '#6fcf97' : '#486581';
+      ctx.strokeStyle = vis.relative > 0.5 ? '#16865A' : '#94A3B8';
       ctx.lineWidth = vis.relative > 0.5 ? 2.5 : 1.5;
       ctx.strokeRect(bx, by, bw, bh);
       ctx.fillStyle = labelColor;
-      ctx.font = '11px Geist Sans, system-ui, sans-serif';
+      ctx.font = '11px Inter, system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(label, bx + bw / 2, by + bh / 2 + 4);
 
@@ -154,7 +154,7 @@ function useEmissionCanvas(inView: boolean, config: CanvasEmissionConfig) {
       const meterH = 4;
       const meterX = bx;
       const meterY = by + bh + 8;
-      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.fillStyle = '#CBD5E1';
       ctx.fillRect(meterX, meterY, meterW, meterH);
       ctx.fillStyle = labelColor;
       ctx.globalAlpha = 0.85;
@@ -195,9 +195,9 @@ export function MoneyPrinterSimulation() {
 
   const usdCanvasRef = useEmissionCanvas(inView, {
     originX: 0.15,
-    color: 'rgba(76, 175, 80, ',
+    color: 'rgba(22, 134, 90, ',
     label: 'FED',
-    labelColor: '#9fb3c8',
+    labelColor: '#475569',
     symbol: '$',
     valuePerSecond: USD_PRINTED_PER_SECOND,
     referenceRate: USD_PRINTED_PER_SECOND,
@@ -213,7 +213,7 @@ export function MoneyPrinterSimulation() {
     originX: 0.15,
     color: 'rgba(247, 147, 26, ',
     label: 'MINER',
-    labelColor: '#f7931a',
+    labelColor: '#F7931A',
     symbol: '₿',
     valuePerSecond: btcUsdPerSecond,
     referenceRate: USD_PRINTED_PER_SECOND,
@@ -238,7 +238,7 @@ export function MoneyPrinterSimulation() {
   const satUSDValue = sessionSats * satValueUsd;
 
   return (
-    <section ref={ref} className="section-shell bg-midnight-900/15">
+    <section ref={ref} className="section-shell bg-bok-surface">
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           kicker="02"
@@ -253,10 +253,10 @@ export function MoneyPrinterSimulation() {
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-center text-sm text-midnight-400 mb-6"
+            className="mb-6 text-center text-sm text-bok-muted"
           >
             At ${btcPriceUsd.toLocaleString()}/BTC, the Fed emits{' '}
-            <span className="font-mono font-semibold text-fiat-400">
+            <span className="font-mono font-semibold text-emerald-700">
               {emissionRatio.toFixed(1)}×
             </span>{' '}
             more USD value per second than miners
@@ -270,22 +270,22 @@ export function MoneyPrinterSimulation() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="glass-card p-5 sm:p-6 relative"
           >
-            <div className="absolute top-0 left-0 w-full h-0.5 rounded-t-2xl bg-gradient-to-r from-fiat-600 to-fiat-400" />
+            <div className="absolute left-0 top-0 h-0.5 w-full rounded-t-2xl bg-emerald-600" />
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="text-sm font-semibold text-fiat-300">USD, Federal Reserve</p>
-                <p className="text-sm text-midnight-500 mt-0.5">
+                <p className="text-sm font-semibold text-emerald-700">USD, Federal Reserve</p>
+                <p className="mt-0.5 text-sm text-bok-muted">
                   +${USD_PRINTED_PER_SECOND.toLocaleString()}/sec, no supply cap
                 </p>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-fiat-500/10 border border-fiat-500/20 flex items-center justify-center">
-                <Printer className="w-4 h-4 text-fiat-400" strokeWidth={1.75} />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-600/20 bg-emerald-600/10">
+                <Printer className="h-4 w-4 text-emerald-700" strokeWidth={1.75} />
               </div>
             </div>
             <canvas ref={usdCanvasRef} className="w-full h-[200px] sm:h-[240px] rounded-xl" />
             <div className="mt-3 flex items-end justify-between">
-              <p className="text-xs text-midnight-500">This session</p>
-              <p className="text-xl font-mono font-bold text-fiat-400">
+              <p className="text-xs text-bok-muted">This session</p>
+              <p className="font-mono text-xl font-bold text-emerald-700">
                 ${Math.floor(sessionUsd).toLocaleString()}
               </p>
             </div>
@@ -297,29 +297,29 @@ export function MoneyPrinterSimulation() {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="glass-card p-5 sm:p-6 relative"
           >
-            <div className="absolute top-0 left-0 w-full h-0.5 rounded-t-2xl bg-gradient-to-r from-bitcoin-600 to-bitcoin-400" />
+            <div className="absolute left-0 top-0 h-0.5 w-full rounded-t-2xl bg-bitcoin-orange" />
             <div className="flex items-start justify-between mb-3">
               <div>
-                <p className="text-sm font-semibold text-bitcoin-300">BTC, protocol emission</p>
-                <p className="text-sm text-midnight-500 mt-0.5">
+                <p className="text-sm font-semibold text-bitcoin-orange">BTC, protocol emission</p>
+                <p className="mt-0.5 text-sm text-bok-muted">
                   ~{Math.round(emission.satsPerSecond).toLocaleString()} sats/sec, 21M cap
                 </p>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-bitcoin-500/10 border border-bitcoin-500/20 flex items-center justify-center">
-                <Pickaxe className="w-4 h-4 text-bitcoin-400" strokeWidth={1.75} />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-bitcoin-orange/20 bg-bitcoin-orange/10">
+                <Pickaxe className="h-4 w-4 text-bitcoin-orange" strokeWidth={1.75} />
               </div>
             </div>
             <canvas ref={satCanvasRef} className="w-full h-[200px] sm:h-[240px] rounded-xl opacity-95" />
             <div className="mt-3 flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs text-midnight-500">Sats emitted</p>
-                <p className="text-lg font-mono font-bold text-bitcoin-400">
+                <p className="text-xs text-bok-muted">Sats emitted</p>
+                <p className="font-mono text-lg font-bold text-bitcoin-orange">
                   {Math.floor(sessionSats).toLocaleString()}
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-midnight-500">@${btcPriceUsd.toLocaleString()}/BTC</p>
-                <p className="text-xl font-mono font-bold text-bitcoin-300">
+                <p className="text-xs text-bok-muted">@${btcPriceUsd.toLocaleString()}/BTC</p>
+                <p className="font-mono text-xl font-bold text-bitcoin-orange">
                   ${satUSDValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               </div>
@@ -334,18 +334,18 @@ export function MoneyPrinterSimulation() {
           className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left"
         >
           <div className="glass-card p-4">
-            <p className="text-sm text-midnight-400 mb-1">USD rate</p>
-            <p className="data-metric text-fiat-400">+${USD_PRINTED_PER_SECOND.toLocaleString()}/sec</p>
+            <p className="mb-1 text-sm text-bok-muted">USD rate</p>
+            <p className="data-metric text-emerald-700">+${USD_PRINTED_PER_SECOND.toLocaleString()}/sec</p>
           </div>
           <div className="glass-card p-4 flex flex-col items-center justify-center gap-1">
-            <p className="text-xl font-light text-midnight-500">vs</p>
+            <p className="text-xl font-light text-bok-muted">vs</p>
             {emissionRatio > 0 && (
-              <p className="text-xs font-mono text-fiat-400/80">{emissionRatio.toFixed(1)}× gap</p>
+              <p className="font-mono text-xs text-emerald-700">{emissionRatio.toFixed(1)}× gap</p>
             )}
           </div>
           <div className="glass-card p-4 sm:text-right">
-            <p className="text-sm text-midnight-400 mb-1">BTC rate (post-halving)</p>
-            <p className="data-metric text-bitcoin-400">~${btcUsdPerSecond.toFixed(2)}/sec</p>
+            <p className="mb-1 text-sm text-bok-muted">BTC rate (post-halving)</p>
+            <p className="data-metric text-bitcoin-orange">~${btcUsdPerSecond.toFixed(2)}/sec</p>
           </div>
         </motion.div>
       </div>

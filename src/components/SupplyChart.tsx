@@ -17,13 +17,13 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   if (!active || !payload) return null;
   const point = supplyData.find(d => d.year === label);
   return (
-    <div className="glass-card p-4 border border-midnight-600/50">
-      <p className="text-sm font-semibold text-midnight-200 mb-2">
+    <div className="glass-card border border-bok-border p-4">
+      <p className="mb-2 text-sm font-semibold text-bok-text">
         {label} {point?.projected ? '(Projected)' : ''}
       </p>
       {payload.map((entry) => (
         <p key={entry.dataKey} className="text-sm">
-          <span className={entry.dataKey === 'usd' ? 'text-fiat-400' : 'text-bitcoin-400'}>
+          <span className={entry.dataKey === 'usd' ? 'text-emerald-700' : 'text-bitcoin-orange'}>
             {entry.dataKey === 'usd' ? `USD M2: $${entry.value.toFixed(1)}T` : `BTC: ${entry.value.toFixed(2)}M`}
           </span>
         </p>
@@ -60,16 +60,16 @@ export function SupplyChart() {
         >
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-6">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-fiat-500" />
-              <span className="text-sm text-midnight-300">USD M2 (Trillions)</span>
+              <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+              <span className="text-sm text-bok-text">USD M2 (Trillions)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-bitcoin-500" />
-              <span className="text-sm text-midnight-300">BTC Supply (Millions)</span>
+              <div className="h-2.5 w-2.5 rounded-full bg-bitcoin-orange" />
+              <span className="text-sm text-bok-text">BTC Supply (Millions)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-0.5 border-t-2 border-dashed border-midnight-500" />
-              <span className="text-sm text-midnight-400">Projected</span>
+              <div className="h-0.5 w-4 border-t-2 border-dashed border-bok-muted" />
+              <span className="text-sm text-bok-muted">Projected</span>
             </div>
           </div>
 
@@ -78,34 +78,34 @@ export function SupplyChart() {
               <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="usdGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4caf50" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4caf50" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#16865A" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#16865A" stopOpacity={0} />
                   </linearGradient>
                   <linearGradient id="btcGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f7931a" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#f7931a" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#F7931A" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#F7931A" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
-                <XAxis dataKey="year" stroke="#627d98" tick={{ fill: '#829ab1', fontSize: 12 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                <XAxis dataKey="year" stroke="#94A3B8" tick={{ fill: '#64748B', fontSize: 12 }} />
                 <YAxis
                   yAxisId="usd"
-                  stroke="#4caf50"
-                  tick={{ fill: '#4caf50', fontSize: 12 }}
-                  label={{ value: 'USD Trillions', angle: -90, position: 'insideLeft', fill: '#4caf50', fontSize: 12 }}
+                  stroke="#16865A"
+                  tick={{ fill: '#16865A', fontSize: 12 }}
+                  label={{ value: 'USD Trillions', angle: -90, position: 'insideLeft', fill: '#16865A', fontSize: 12 }}
                 />
                 <YAxis
                   yAxisId="btc"
                   orientation="right"
-                  stroke="#f7931a"
-                  tick={{ fill: '#f7931a', fontSize: 12 }}
+                  stroke="#F7931A"
+                  tick={{ fill: '#D97706', fontSize: 12 }}
                   domain={[0, 21]}
-                  label={{ value: 'BTC Millions', angle: 90, position: 'insideRight', fill: '#f7931a', fontSize: 12 }}
+                  label={{ value: 'BTC Millions', angle: 90, position: 'insideRight', fill: '#D97706', fontSize: 12 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <ReferenceLine yAxisId="usd" x={2026} stroke="#486581" strokeDasharray="5 5" label={{ value: 'Now', fill: '#829ab1', fontSize: 11 }} />
-                <Area yAxisId="usd" type="monotone" dataKey="usd" stroke="#4caf50" strokeWidth={2} fill="url(#usdGradient)" />
-                <Area yAxisId="btc" type="monotone" dataKey="btc" stroke="#f7931a" strokeWidth={2} fill="url(#btcGradient)" connectNulls={false} />
+                <ReferenceLine yAxisId="usd" x={2026} stroke="#94A3B8" strokeDasharray="5 5" label={{ value: 'Now', fill: '#64748B', fontSize: 11 }} />
+                <Area yAxisId="usd" type="monotone" dataKey="usd" stroke="#16865A" strokeWidth={2} fill="url(#usdGradient)" />
+                <Area yAxisId="btc" type="monotone" dataKey="btc" stroke="#F7931A" strokeWidth={2} fill="url(#btcGradient)" connectNulls={false} />
               </AreaChart>
             </ResponsiveContainer>
           </div>

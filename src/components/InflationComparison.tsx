@@ -111,28 +111,28 @@ function InflationTooltip({
 
   return (
     <div className="bok-card p-4 border border-bok-border">
-      <p className="text-sm font-semibold text-midnight-200 mb-2">{label}</p>
+      <p className="mb-2 text-sm font-semibold text-bok-text">{label}</p>
       {payload.map((entry) => {
         if (entry.value == null) return null;
         if (entry.dataKey === 'usd') {
           const labelText =
             row?.usdSource === 'm2' ? 'USD inflation (M2 YoY)' : 'Truflation CPI';
           return (
-            <p key={entry.dataKey} className="text-sm text-fiat-400">
+            <p key={entry.dataKey} className="text-sm text-emerald-700">
               {labelText}: {entry.value.toFixed(1)}%
             </p>
           );
         }
         if (entry.dataKey === 'btc') {
           return (
-            <p key={entry.dataKey} className="text-sm text-bitcoin-400">
+            <p key={entry.dataKey} className="text-sm text-bitcoin-orange">
               BTC circulation YoY: {entry.value.toFixed(2)}%
             </p>
           );
         }
         if (entry.dataKey === 'btcPrice') {
           return (
-            <p key={entry.dataKey} className="text-sm text-amber-300">
+            <p key={entry.dataKey} className="text-sm text-blue-700">
               BTC price: {formatBtcPriceUsd(entry.value)}
             </p>
           );
@@ -196,7 +196,7 @@ export function InflationComparison() {
   ];
 
   return (
-    <section ref={ref} className="section-shell bg-midnight-900/15">
+    <section ref={ref} className="section-shell bg-bok-surface">
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           kicker="04"
@@ -215,41 +215,41 @@ export function InflationComparison() {
         >
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-6">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-fiat-500" />
-              <span className="text-sm text-midnight-300">Truflation CPI YoY (%)</span>
+              <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+              <span className="text-sm text-bok-text">Truflation CPI YoY (%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-bitcoin-500" />
-              <span className="text-sm text-midnight-300">BTC circulation YoY (%)</span>
+              <div className="h-2.5 w-2.5 rounded-full bg-bitcoin-orange" />
+              <span className="text-sm text-bok-text">BTC circulation YoY (%)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-amber-300" />
-              <span className="text-sm text-midnight-300">BTC price (USD, log scale)</span>
+              <div className="h-2.5 w-2.5 rounded-full bg-blue-600" />
+              <span className="text-sm text-bok-text">BTC price (USD, log scale)</span>
             </div>
           </div>
 
           <div className="h-[420px] sm:h-[480px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 48, left: 4, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis
                   dataKey="year"
                   type="number"
                   domain={['dataMin', 'dataMax']}
                   allowDecimals={false}
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 12 }}
+                  stroke="#94A3B8"
+                  tick={{ fill: '#64748B', fontSize: 12 }}
                   interval="preserveStartEnd"
                 />
                 <YAxis
                   yAxisId="pct"
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 12 }}
+                  stroke="#94A3B8"
+                  tick={{ fill: '#64748B', fontSize: 12 }}
                   label={{
                     value: 'Inflation (%)',
                     angle: -90,
                     position: 'insideLeft',
-                    fill: '#94a3b8',
+                    fill: '#64748B',
                     fontSize: 11,
                   }}
                 />
@@ -258,61 +258,61 @@ export function InflationComparison() {
                   orientation="right"
                   scale="log"
                   domain={[0.05, 'auto']}
-                  stroke="#64748b"
-                  tick={{ fill: '#94a3b8', fontSize: 11 }}
+                  stroke="#94A3B8"
+                  tick={{ fill: '#64748B', fontSize: 11 }}
                   tickFormatter={priceTick}
                   label={{
                     value: 'BTC price',
                     angle: 90,
                     position: 'insideRight',
-                    fill: '#94a3b8',
+                    fill: '#64748B',
                     fontSize: 11,
                   }}
                 />
                 <Tooltip content={<InflationTooltip />} />
                 <ReferenceLine
                   x={currentYear}
-                  stroke="#64748b"
+                  stroke="#94A3B8"
                   strokeDasharray="5 5"
-                  label={{ value: 'Now', fill: '#94a3b8', fontSize: 11 }}
+                  label={{ value: 'Now', fill: '#64748B', fontSize: 11 }}
                 />
-                <ReferenceLine yAxisId="pct" y={0} stroke="#64748b" />
+                <ReferenceLine yAxisId="pct" y={0} stroke="#94A3B8" />
                 <Line
                   yAxisId="pct"
                   type="monotone"
                   dataKey="usd"
-                  stroke="#4caf50"
+                  stroke="#16865A"
                   strokeWidth={2.5}
                   connectNulls
-                  dot={{ fill: '#4caf50', r: 3 }}
-                  activeDot={{ r: 5, fill: '#66bb6a' }}
+                  dot={{ fill: '#16865A', r: 3 }}
+                  activeDot={{ r: 5, fill: '#34A373' }}
                 />
                 <Line
                   yAxisId="pct"
                   type="monotone"
                   dataKey="btc"
-                  stroke="#f7931a"
+                  stroke="#F7931A"
                   strokeWidth={2.5}
                   connectNulls
-                  dot={{ fill: '#f7931a', r: 3 }}
-                  activeDot={{ r: 5, fill: '#ffca28' }}
+                  dot={{ fill: '#F7931A', r: 3 }}
+                  activeDot={{ r: 5, fill: '#FDBA74' }}
                 />
                 <Line
                   yAxisId="price"
                   type="monotone"
                   dataKey="btcPrice"
-                  stroke="#fcd34d"
+                  stroke="#2563EB"
                   strokeWidth={2}
                   connectNulls
-                  dot={{ fill: '#fcd34d', r: 2.5 }}
-                  activeDot={{ r: 4, fill: '#fde68a' }}
+                  dot={{ fill: '#2563EB', r: 2.5 }}
+                  activeDot={{ r: 4, fill: '#60A5FA' }}
                 />
                 {chartData.length > 0 && (
                   <Brush
                     dataKey="year"
                     height={32}
-                    stroke="#475569"
-                    fill="#0f172a"
+                    stroke="#CBD5E1"
+                    fill="#FFFFFF"
                     travellerWidth={10}
                     startIndex={brushStartIndex}
                     endIndex={brushEndIndex}
@@ -335,7 +335,7 @@ export function InflationComparison() {
             >
               <p
                 className={`data-metric mb-2 ${
-                  item.accent === 'fiat' ? 'text-fiat-400' : 'text-bitcoin-400'
+                  item.accent === 'fiat' ? 'text-emerald-700' : 'text-bitcoin-orange'
                 }`}
               >
                 {item.value}

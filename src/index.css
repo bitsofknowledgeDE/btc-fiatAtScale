@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import '../../../CI/web/bok.css';
 
 @tailwind base;
 @tailwind components;
@@ -9,100 +9,71 @@
     scroll-behavior: smooth;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-  }
-
   body {
-    @apply bg-bok-bg text-midnight-100 font-sans antialiased;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    letter-spacing: -0.02em;
+    background-color: rgb(var(--bok-surface));
+    @apply text-bok-text antialiased;
   }
 
   ::selection {
     background-color: rgba(247, 147, 26, 0.25);
-    color: #f8fafc;
+    color: #0F172A;
   }
 }
 
 @layer components {
-  .spectrum-bar {
-    background: linear-gradient(135deg, #E91E8C 0%, #7C3AED 35%, #06B6D4 70%, #10B981 100%);
-  }
-
   .glass-card,
   .bok-card {
-    @apply bg-bok-surface border border-bok-border rounded-2xl;
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  }
-
-  .glass-nav,
-  .bok-header-shell {
-    @apply bg-bok-surface/95 backdrop-blur-xl border-b border-bok-border;
-  }
-
-  .section-kicker {
-    @apply text-[11px] font-bold uppercase tracking-[0.14em] text-bok-muted mb-3 flex items-center gap-2;
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-  }
-
-  .section-kicker-num {
-    @apply text-btc-orange tabular-nums;
+    @apply rounded-2xl border border-bok-border bg-white;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
   }
 
   .gradient-text-bitcoin {
-    @apply text-btc-orange;
+    @apply text-bitcoin-orange;
   }
 
   .gradient-text-fiat {
-    @apply text-fiat-400;
+    @apply text-bok-text;
   }
 
   .section-shell {
-    @apply py-20 sm:py-28 px-4;
+    @apply px-4 py-20 sm:py-24;
   }
 
   .section-heading {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-none mb-4 font-display;
+    @apply mb-4 font-heading text-3xl font-extrabold leading-tight tracking-tight text-bok-text sm:text-4xl lg:text-5xl;
   }
 
   .section-subtext {
-    @apply text-bok-muted text-base sm:text-lg leading-relaxed;
+    @apply text-base leading-relaxed text-bok-muted sm:text-lg;
   }
 
   .data-metric {
-    @apply text-2xl sm:text-3xl font-mono font-bold tracking-tight;
+    @apply font-mono text-2xl font-bold tracking-tight sm:text-3xl;
   }
 
   .btn-primary {
-    @apply inline-flex items-center px-5 py-2.5 rounded-full bg-btc-orange text-white text-sm font-semibold transition-all duration-200 hover:brightness-110 active:scale-[0.98];
-    box-shadow: 0 2px 10px rgba(247, 147, 26, 0.35);
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    @apply inline-flex items-center rounded-lg bg-bitcoin-orange px-5 py-2.5 font-heading text-sm font-bold text-white transition duration-200 hover:brightness-105 active:translate-y-px;
+    box-shadow: 0 6px 18px rgba(247, 147, 26, 0.22);
   }
 
   .btn-secondary {
-    @apply inline-flex items-center px-5 py-2.5 rounded-full border border-bok-border bg-midnight-900 text-midnight-200 text-sm font-medium transition-all duration-200 hover:bg-midnight-800 active:scale-[0.98];
+    @apply inline-flex items-center rounded-lg border border-bok-border bg-white px-5 py-2.5 text-sm font-medium text-bok-text transition duration-200 hover:bg-bok-surface active:translate-y-px;
   }
 
   .pill-button {
-    @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.98];
+    @apply rounded-full border px-4 py-2 text-sm font-medium transition duration-200 active:scale-[0.98];
   }
 
   .pill-button-active {
-    @apply bg-midnight-800 text-midnight-50 border border-bok-border;
+    @apply border-bitcoin-orange/30 bg-bitcoin-orange/10 text-bitcoin-orange;
   }
 
   .pill-button-inactive {
-    @apply text-bok-muted hover:text-midnight-200 hover:bg-midnight-900/80;
+    @apply border-bok-border bg-white text-bok-muted hover:border-bitcoin-orange/30 hover:text-bok-text;
   }
 
   .compare-cell {
-    @apply p-4 sm:p-5 rounded-2xl border border-bok-border transition-colors duration-200;
+    @apply rounded-xl border p-4 transition-colors duration-200 sm:p-5;
   }
 }
 
@@ -111,12 +82,17 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {

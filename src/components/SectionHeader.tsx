@@ -30,8 +30,8 @@ export function SectionHeader({
     >
       {(kicker || kickerLabel) && (
         <p className={`section-kicker ${isLeft ? '' : 'justify-center'}`}>
-          {kicker && <span className="section-kicker-num">{kicker}</span>}
-          {kickerLabel && <span>{kickerLabel}</span>}
+          {kicker && <span className="num">{kicker}</span>}
+          {kickerLabel && <span className="label">{kickerLabel}</span>}
         </p>
       )}
       <h2 className="section-heading">{title}</h2>

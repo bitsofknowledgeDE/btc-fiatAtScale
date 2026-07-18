@@ -14,7 +14,7 @@ export function BrandLogo({ size = 'md', animate = true }: BrandLogoProps) {
 
   return (
     <div
-      className="relative flex items-end justify-center rounded-xl bg-gradient-to-br from-midnight-800 to-midnight-900 border border-bok-border overflow-hidden shrink-0"
+      className="relative flex shrink-0 items-end justify-center overflow-hidden rounded-xl border border-bok-border bg-white"
       style={{ width: dims.w, height: dims.h, padding: '5px', boxShadow: '0 2px 10px rgba(247,147,26,0.15)' }}
     >
       {barHeights.map((h, i) => {
@@ -28,8 +28,8 @@ export function BrandLogo({ size = 'md', animate = true }: BrandLogoProps) {
               width: barWidth,
               marginRight: i < barHeights.length - 1 ? gap : 0,
               background: isLast
-                ? 'linear-gradient(to top, #f7931a, #ffca28)'
-                : 'linear-gradient(to top, #4caf50, #81c784)',
+                ? 'linear-gradient(to top, #F7931A, #FDBA74)'
+                : 'linear-gradient(to top, #16865a, #34a373)',
               opacity: isLast ? 1 : 0.6 + i * 0.1,
             }}
             initial={{ height: 0 }}
@@ -44,7 +44,7 @@ export function BrandLogo({ size = 'md', animate = true }: BrandLogoProps) {
       })}
       {animate && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-transparent to-white/5"
+          className="absolute inset-0 bg-gradient-to-t from-transparent to-orange-50/40"
           animate={{ opacity: [0, 0.3, 0] }}
           transition={{ duration: 3, repeat: Infinity }}
         />
@@ -58,8 +58,8 @@ export function BrandMark({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   return (
     <div className="flex items-center gap-2">
       <BrandLogo size={size} />
-      <span className={`${textSize} font-bold text-midnight-100`}>
-        fiat<span className="text-bitcoin-400">At</span>Scale
+      <span className={`${textSize} font-bold text-bok-text`}>
+        fiat<span className="text-bitcoin-orange">At</span>Scale
       </span>
     </div>
   );

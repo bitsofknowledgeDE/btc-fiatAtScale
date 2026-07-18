@@ -19,23 +19,23 @@ export function SupplySnapshot() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="glass-card p-6 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-fiat-600 to-fiat-400" />
+          <div className="absolute left-0 top-0 h-0.5 w-full bg-emerald-600" />
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-fiat-400" strokeWidth={1.75} />
-                <span className="text-sm font-medium text-fiat-300">Total USD M2</span>
+                <TrendingUp className="h-4 w-4 text-emerald-700" strokeWidth={1.75} />
+                <span className="text-sm font-medium text-emerald-700">Total USD M2</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-mono font-bold text-midnight-50 tracking-tight">
+              <p className="font-mono text-2xl font-bold tracking-tight text-bok-text sm:text-3xl">
                 ${Math.floor(liveUSD).toLocaleString('en-US')}
               </p>
-              <p className="text-sm text-midnight-500 mt-2">
+              <p className="mt-2 text-sm text-bok-muted">
                 Growing +${USD_PRINTED_PER_SECOND.toLocaleString()}/sec
               </p>
             </div>
             <div className="text-right">
-              <p className="text-3xl font-mono font-bold text-fiat-400/80">∞</p>
-              <p className="text-xs text-midnight-500 mt-1">No cap</p>
+              <p className="font-mono text-3xl font-bold text-emerald-700">∞</p>
+              <p className="mt-1 text-xs text-bok-muted">No cap</p>
             </div>
           </div>
         </motion.div>
@@ -46,25 +46,25 @@ export function SupplySnapshot() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="glass-card p-6 relative overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-bitcoin-600 to-bitcoin-400" />
+          <div className="absolute left-0 top-0 h-0.5 w-full bg-bitcoin-orange" />
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                <Coins className="w-4 h-4 text-bitcoin-400" strokeWidth={1.75} />
-                <span className="text-sm font-medium text-bitcoin-300">Bitcoin supply</span>
+                <Coins className="h-4 w-4 text-bitcoin-orange" strokeWidth={1.75} />
+                <span className="text-sm font-medium text-bitcoin-orange">Bitcoin supply</span>
               </div>
-              <p className="text-2xl sm:text-3xl font-mono font-bold text-midnight-50 tracking-tight">
+              <p className="font-mono text-2xl font-bold tracking-tight text-bok-text sm:text-3xl">
                 {circulatingSupply.toLocaleString()} BTC
               </p>
-              <p className="text-sm text-midnight-500 mt-2">
+              <p className="mt-2 text-sm text-bok-muted">
                 {minedPct.toFixed(2)}% of 21M cap mined
               </p>
             </div>
             <div className="flex flex-col items-end gap-1">
-              <span className="text-2xl font-mono font-bold text-bitcoin-400">{minedPct.toFixed(0)}%</span>
-              <div className="w-16 h-1 rounded-full bg-midnight-800 overflow-hidden">
+              <span className="font-mono text-2xl font-bold text-bitcoin-orange">{minedPct.toFixed(0)}%</span>
+              <div className="h-1 w-16 overflow-hidden rounded-full bg-slate-200">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-bitcoin-600 to-bitcoin-400"
+                  className="h-full rounded-full bg-bitcoin-orange"
                   initial={{ width: 0 }}
                   animate={inView ? { width: `${minedPct}%` } : {}}
                   transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}

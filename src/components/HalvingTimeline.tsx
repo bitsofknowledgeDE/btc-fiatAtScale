@@ -20,7 +20,7 @@ export function HalvingTimeline() {
         />
 
         <div className="relative pl-0 md:pl-8">
-          <div className="absolute left-3 md:left-8 top-2 bottom-2 w-px bg-gradient-to-b from-bitcoin-500/60 via-bitcoin-600/40 to-transparent hidden md:block" />
+          <div className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-bitcoin-orange/60 to-transparent md:left-8 md:block" />
 
           <div className="space-y-5">
             {halvingSchedule.map((halving, index) => {
@@ -35,24 +35,24 @@ export function HalvingTimeline() {
                   className="relative md:pl-10"
                 >
                   <div className={`hidden md:block absolute left-0 top-6 w-3 h-3 rounded-full border-2 ${
-                    isFuture ? 'border-midnight-500 bg-midnight-900' : 'border-bitcoin-500 bg-bitcoin-500'
+                    isFuture ? 'border-bok-muted bg-white' : 'border-bitcoin-orange bg-bitcoin-orange'
                   }`} />
 
-                  <div className={`glass-card p-5 sm:p-6 ${isFuture ? 'border-dashed border-midnight-600/40' : ''}`}>
+                  <div className={`glass-card p-5 sm:p-6 ${isFuture ? 'border-dashed border-bok-muted/50' : ''}`}>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-3">
-                      <div className="flex items-center gap-2 text-sm text-midnight-400">
+                      <div className="flex items-center gap-2 text-sm text-bok-muted">
                         <Clock className="w-4 h-4" strokeWidth={1.75} />
                         {halving.date}{isFuture ? ' (est.)' : ''}
                       </div>
                       <div className="flex items-center gap-2">
-                        <Layers className="w-4 h-4 text-bitcoin-400" strokeWidth={1.75} />
-                        <span className="text-lg font-bold text-bitcoin-400">{halving.blockReward} BTC/block</span>
+                        <Layers className="h-4 w-4 text-bitcoin-orange" strokeWidth={1.75} />
+                        <span className="text-lg font-bold text-bitcoin-orange">{halving.blockReward} BTC/block</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-midnight-300">
-                      <TrendingDown className="w-4 h-4 text-midnight-500" strokeWidth={1.75} />
+                    <div className="flex items-center gap-2 text-sm text-bok-text">
+                      <TrendingDown className="h-4 w-4 text-bok-muted" strokeWidth={1.75} />
                       {halving.totalSupplyAtHalving.toLocaleString()} BTC mined
-                      <span className="text-midnight-500">({halving.inflationRate}% annual)</span>
+                      <span className="text-bok-muted">({halving.inflationRate}% annual)</span>
                     </div>
                   </div>
                 </motion.div>

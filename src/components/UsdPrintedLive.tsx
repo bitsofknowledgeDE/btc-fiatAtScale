@@ -17,12 +17,12 @@ function DollarBtcBundle({
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-      className={`flex-shrink-0 flex items-center justify-center rounded-md bg-fiat-500/15 border border-fiat-500/30 ${
+      className={`flex flex-shrink-0 items-center justify-center rounded-md border border-emerald-600/30 bg-emerald-600/10 ${
         compact ? 'w-5 h-5' : 'w-7 h-7 rounded-lg'
       }`}
       title={`$${((index + 1) * btcPriceUsd).toLocaleString()} printed`}
     >
-      <DollarSign className={compact ? 'w-2.5 h-2.5 text-fiat-400' : 'w-3.5 h-3.5 text-fiat-400'} strokeWidth={1.75} />
+      <DollarSign className={compact ? 'h-2.5 w-2.5 text-emerald-700' : 'h-3.5 w-3.5 text-emerald-700'} strokeWidth={1.75} />
     </motion.div>
   );
 }
@@ -41,8 +41,8 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
   const maxBundles = isNav ? 20 : 24;
 
   const amountClass = isNav
-    ? 'font-mono font-bold text-fiat-300 text-sm sm:text-base tabular-nums'
-    : 'text-lg sm:text-xl font-mono font-bold text-fiat-300 tabular-nums';
+    ? 'font-mono font-bold text-emerald-700 text-sm sm:text-base tabular-nums'
+    : 'text-lg sm:text-xl font-mono font-bold text-emerald-700 tabular-nums';
 
   const AmountValue = () => (
     <>
@@ -56,7 +56,7 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
         </motion.span>
       )}
       {ghostAmount && (
-        <span className={`${amountClass} text-fiat-300/30`}>${formatUsd(usdPrintedSinceLoad)}</span>
+        <span className={`${amountClass} opacity-30`}>${formatUsd(usdPrintedSinceLoad)}</span>
       )}
       {!morphAmount && !ghostAmount && (
         <span className={amountClass}>${formatUsd(usdPrintedSinceLoad)}</span>
@@ -71,26 +71,26 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -6 }}
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full px-2.5 py-2 rounded-xl bg-fiat-500/10 border border-fiat-500/20"
+        className="w-full rounded-xl border border-emerald-600/20 bg-emerald-50 px-2.5 py-2"
       >
         <div className="flex items-center justify-between gap-3 mb-1.5">
           <div className="flex items-center gap-2 min-w-0">
-            <TrendingUp className="w-3.5 h-3.5 text-fiat-400 shrink-0" strokeWidth={1.75} />
-            <span className="text-xs text-fiat-400/90 shrink-0">USD printed</span>
+            <TrendingUp className="h-3.5 w-3.5 shrink-0 text-emerald-700" strokeWidth={1.75} />
+            <span className="shrink-0 text-xs text-emerald-700">USD printed</span>
           </div>
           <AmountValue />
         </div>
 
-        <div className="relative h-1 rounded-full overflow-hidden bg-midnight-800/60 mb-1.5">
+        <div className="relative mb-1.5 h-1 overflow-hidden rounded-full bg-emerald-100">
           <motion.div
-            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-fiat-700 via-fiat-500 to-fiat-300"
+            className="absolute inset-y-0 left-0 rounded-full bg-emerald-600"
             style={{ width: `${usdBarProgress}%` }}
             transition={{ duration: 0.05 }}
           />
         </div>
 
         <div className="flex items-center justify-between gap-2">
-          <p className="text-[10px] sm:text-xs text-midnight-500 truncate">
+          <p className="truncate text-[10px] text-bok-muted sm:text-xs">
             +${USD_PRINTED_PER_SECOND.toLocaleString()}/s · 1 BTC ${btcPriceUsd.toLocaleString()}
           </p>
         </div>
@@ -103,7 +103,7 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
               ))}
             </AnimatePresence>
             {usdBtcEquiv > maxBundles && (
-              <span className="text-[10px] text-fiat-400 font-mono self-center px-0.5">
+              <span className="self-center px-0.5 font-mono text-[10px] text-emerald-700">
                 +{usdBtcEquiv - maxBundles}
               </span>
             )}
@@ -117,19 +117,19 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
     <div>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <TrendingUp className="w-4 h-4 text-fiat-400" strokeWidth={1.75} />
-          <span className="text-sm font-semibold text-fiat-300">USD printed</span>
+          <TrendingUp className="h-4 w-4 text-emerald-700" strokeWidth={1.75} />
+          <span className="text-sm font-semibold text-emerald-700">USD printed</span>
         </div>
         <AmountValue />
       </div>
-      <div className="relative h-2 rounded-full overflow-hidden bg-midnight-800/60">
+      <div className="relative h-2 overflow-hidden rounded-full bg-emerald-100">
         <motion.div
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-fiat-700 via-fiat-500 to-fiat-300"
+          className="absolute inset-y-0 left-0 rounded-full bg-emerald-600"
           style={{ width: `${usdBarProgress}%` }}
           transition={{ duration: 0.05 }}
         />
       </div>
-      <p className="text-xs text-midnight-500 mt-1.5">
+      <p className="mt-1.5 text-xs text-bok-muted">
         +${USD_PRINTED_PER_SECOND.toLocaleString()}/sec toward 1 BTC (${btcPriceUsd.toLocaleString()})
       </p>
       {usdBtcEquiv > 0 && !ghostAmount && (
@@ -140,7 +140,7 @@ export function UsdPrintedLive({ variant, morphAmount, ghostAmount }: UsdPrinted
             ))}
           </AnimatePresence>
           {usdBtcEquiv > maxBundles && (
-            <span className="text-xs text-fiat-400 font-mono self-center px-1">+{usdBtcEquiv - maxBundles}</span>
+            <span className="self-center px-1 font-mono text-xs text-emerald-700">+{usdBtcEquiv - maxBundles}</span>
           )}
         </div>
       )}

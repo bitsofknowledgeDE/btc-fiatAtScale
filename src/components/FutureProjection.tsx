@@ -21,11 +21,11 @@ const yearTicks = [1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030, 2040, 2050];
 function ProjectionTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; dataKey: string }>; label?: number }) {
   if (!active || !payload) return null;
   return (
-    <div className="glass-card p-4 border border-midnight-600/50">
-      <p className="text-sm font-semibold text-midnight-200 mb-2">{label}</p>
+    <div className="glass-card border border-bok-border p-4">
+      <p className="mb-2 text-sm font-semibold text-bok-text">{label}</p>
       {payload.map((entry) => (
         <p key={entry.dataKey} className="text-sm">
-          <span className={entry.dataKey === 'usd' ? 'text-fiat-400' : 'text-bitcoin-400'}>
+          <span className={entry.dataKey === 'usd' ? 'text-emerald-700' : 'text-bitcoin-orange'}>
             {entry.dataKey === 'usd' ? `USD M2: $${entry.value.toFixed(1)}T` : `BTC: ${entry.value.toFixed(2)}M`}
           </span>
         </p>
@@ -40,7 +40,7 @@ export function FutureProjection() {
   const avgTruflationSince2010 = truflationAverageSince(2010);
 
   return (
-    <section ref={ref} className="section-shell bg-midnight-900/15">
+    <section ref={ref} className="section-shell bg-bok-surface">
       <div className="max-w-6xl mx-auto">
         <SectionHeader
           kicker="06"
@@ -57,40 +57,40 @@ export function FutureProjection() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="glass-card p-5 sm:p-8"
         >
-          <p className="text-sm font-medium text-midnight-300 mb-4">USD M2 supply, 1960-2050 (trillions)</p>
+          <p className="mb-4 text-sm font-medium text-bok-text">USD M2 supply, 1960-2050 (trillions)</p>
           <div className="flex items-center gap-4 mb-6">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-sm bg-fiat-500" />
-              <span className="text-xs text-midnight-400">Historical</span>
+              <div className="h-2.5 w-2.5 rounded-sm bg-emerald-600" />
+              <span className="text-xs text-bok-muted">Historical</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-sm bg-fiat-800 border border-fiat-600" />
-              <span className="text-xs text-midnight-400">Projected</span>
+              <div className="h-2.5 w-2.5 rounded-sm border border-emerald-700 bg-emerald-800" />
+              <span className="text-xs text-bok-muted">Projected</span>
             </div>
           </div>
           <div className="h-[340px] sm:h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={projectionData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis
                   dataKey="year"
                   type="number"
                   domain={[yearMin, yearMax]}
                   ticks={yearTicks}
-                  stroke="#627d98"
-                  tick={{ fill: '#829ab1', fontSize: 11 }}
+                  stroke="#94A3B8"
+                  tick={{ fill: '#64748B', fontSize: 11 }}
                   scale="linear"
                 />
                 <YAxis
-                  stroke="#627d98"
-                  tick={{ fill: '#829ab1', fontSize: 12 }}
-                  label={{ value: 'USD Trillions', angle: -90, position: 'insideLeft', fill: '#829ab1', fontSize: 12 }}
+                  stroke="#94A3B8"
+                  tick={{ fill: '#64748B', fontSize: 12 }}
+                  label={{ value: 'USD Trillions', angle: -90, position: 'insideLeft', fill: '#64748B', fontSize: 12 }}
                 />
                 <Tooltip content={<ProjectionTooltip />} />
-                <ReferenceLine x={2026} stroke="#f7931a" strokeDasharray="5 5" strokeWidth={1.5} label={{ value: 'Today', fill: '#f7931a', fontSize: 11, position: 'top' }} />
+                <ReferenceLine x={2026} stroke="#F7931A" strokeDasharray="5 5" strokeWidth={1.5} label={{ value: 'Today', fill: '#D97706', fontSize: 11, position: 'top' }} />
                 <Bar dataKey="usd" radius={[3, 3, 0, 0]} barSize={12}>
                   {projectionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.projected ? '#1b5e20' : '#4caf50'} opacity={entry.projected ? 0.75 : 1} />
+                    <Cell key={`cell-${index}`} fill={entry.projected ? '#166534' : '#16865A'} opacity={entry.projected ? 0.78 : 1} />
                   ))}
                 </Bar>
               </ComposedChart>
@@ -103,10 +103,10 @@ export function FutureProjection() {
             initial={{ opacity: 0, y: 16 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.25 }}
-            className="glass-card p-6 bg-fiat-900/10"
+            className="glass-card bg-emerald-50 p-6"
           >
-            <p className="data-metric text-fiat-400 mb-2">{multiplier2050}x</p>
-            <p className="text-sm text-midnight-400">Projected USD supply growth by 2050</p>
+            <p className="data-metric mb-2 text-emerald-700">{multiplier2050}x</p>
+            <p className="text-sm text-bok-muted">Projected USD supply growth by 2050</p>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -114,8 +114,8 @@ export function FutureProjection() {
             transition={{ delay: 0.32 }}
             className="glass-card p-6"
           >
-            <p className="data-metric text-bitcoin-400 mb-2">0%</p>
-            <p className="text-sm text-midnight-400">BTC growth after ~2140</p>
+            <p className="data-metric mb-2 text-bitcoin-orange">0%</p>
+            <p className="text-sm text-bok-muted">BTC growth after ~2140</p>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -123,8 +123,8 @@ export function FutureProjection() {
             transition={{ delay: 0.39 }}
             className="glass-card p-6"
           >
-            <p className="data-metric text-midnight-100 mb-2">{avgTruflationSince2010.toFixed(1)}%</p>
-            <p className="text-sm text-midnight-400">Avg. Truflation CPI since 2010</p>
+            <p className="data-metric mb-2 text-bok-text">{avgTruflationSince2010.toFixed(1)}%</p>
+            <p className="text-sm text-bok-muted">Avg. Truflation CPI since 2010</p>
           </motion.div>
         </div>
       </div>

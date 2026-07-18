@@ -29,7 +29,7 @@ function formatUsdDaily(usdPerSecond: number): string {
 
 function DotGrid({ count, color, maxDisplay }: { count: number; color: 'fiat' | 'bitcoin'; maxDisplay: number }) {
   const displayed = Math.min(count, maxDisplay);
-  const colorClass = color === 'fiat' ? 'bg-fiat-400' : 'bg-bitcoin-400';
+  const colorClass = color === 'fiat' ? 'bg-emerald-600' : 'bg-bitcoin-orange';
 
   return (
     <div className="flex flex-wrap gap-[3px] justify-start max-h-[180px] overflow-hidden">
@@ -43,7 +43,7 @@ function DotGrid({ count, color, maxDisplay }: { count: number; color: 'fiat' | 
         />
       ))}
       {count > maxDisplay && (
-        <span className={`w-full text-xs mt-2 ${color === 'fiat' ? 'text-fiat-400' : 'text-bitcoin-400'}`}>
+        <span className={`mt-2 w-full text-xs ${color === 'fiat' ? 'text-emerald-700' : 'text-bitcoin-orange'}`}>
           +{(count - maxDisplay).toLocaleString()} more
         </span>
       )}
@@ -126,19 +126,19 @@ export function ScaleVisualization() {
           className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5"
         >
           <div className="glass-card p-6 sm:p-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-fiat-900/20 to-transparent pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent" />
             <div className="relative">
-              <h3 className="text-xl font-bold text-fiat-400 mb-1">{scale.usdLabel}</h3>
-              <p className="text-sm text-midnight-400 mb-6">US Dollar</p>
+              <h3 className="mb-1 text-xl font-bold text-emerald-700">{scale.usdLabel}</h3>
+              <p className="mb-6 text-sm text-bok-muted">US Dollar</p>
               <DotGrid count={Math.floor(usdCount)} color="fiat" maxDisplay={500} />
             </div>
           </div>
 
           <div className="glass-card p-6 sm:p-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-bitcoin-900/15 to-transparent pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent" />
             <div className="relative">
-              <h3 className="text-xl font-bold text-bitcoin-400 mb-1">{scale.btcLabel}</h3>
-              <p className="text-sm text-midnight-400 mb-6">Bitcoin</p>
+              <h3 className="mb-1 text-xl font-bold text-bitcoin-orange">{scale.btcLabel}</h3>
+              <p className="mb-6 text-sm text-bok-muted">Bitcoin</p>
               <DotGrid count={Math.floor(btcCount)} color="bitcoin" maxDisplay={500} />
             </div>
           </div>
@@ -148,7 +148,7 @@ export function ScaleVisualization() {
           key={scale.description}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-midnight-300 mt-8 max-w-xl text-lg leading-relaxed"
+          className="mt-8 max-w-xl text-lg leading-relaxed text-bok-text"
         >
           {scale.description}
         </motion.p>

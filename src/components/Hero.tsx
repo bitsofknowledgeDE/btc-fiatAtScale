@@ -10,10 +10,10 @@ function BitcoinBundle({ index }: { index: number }) {
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-      className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-lg bg-bitcoin-500/15 border border-bitcoin-500/30"
+      className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg border border-bitcoin-orange/30 bg-bitcoin-orange/10"
       title={`${index + 1} BTC mined`}
     >
-      <Bitcoin className="w-3.5 h-3.5 text-bitcoin-400" strokeWidth={1.75} />
+      <Bitcoin className="h-3.5 w-3.5 text-bitcoin-orange" strokeWidth={1.75} />
     </motion.div>
   );
 }
@@ -32,13 +32,13 @@ export function Hero() {
   } = useLiveRace();
 
   return (
-    <section className="relative min-h-[100dvh] flex items-center overflow-x-hidden px-4 pt-28 pb-12">
+    <section className="relative flex min-h-[calc(100dvh-5rem)] items-center overflow-x-hidden px-4 py-16">
       <div
         className="absolute inset-0 pointer-events-none"
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 15% 50%, rgba(76, 175, 80, 0.05), transparent), radial-gradient(ellipse 60% 50% at 85% 40%, rgba(247, 147, 26, 0.07), transparent)',
+            'radial-gradient(ellipse 60% 55% at 85% 35%, rgba(247, 147, 26, 0.08), transparent 70%)',
         }}
       />
 
@@ -50,13 +50,13 @@ export function Hero() {
           className="text-left"
         >
           <p className="section-kicker mb-4">
-            <span className="section-kicker-num">01</span>
-            <span>Live monetary divergence</span>
+            <span className="num">01</span>
+            <span className="label">Live monetary divergence</span>
           </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-none mb-5 font-display">
-            <span className="text-midnight-100">fiat</span>
-            <span className="text-btc-orange">At</span>
-            <span className="text-midnight-100">Scale</span>
+          <h1 className="mb-5 font-heading text-4xl font-extrabold leading-none tracking-tighter sm:text-5xl lg:text-6xl">
+            <span className="text-bok-text">fiat</span>
+            <span className="text-bitcoin-orange">At</span>
+            <span className="text-bok-text">Scale</span>
           </h1>
           <p className="text-base sm:text-lg text-bok-muted max-w-md leading-relaxed mb-6">
             Infinite fiat expansion meets Bitcoin's fixed 21 million cap. Watch the gap widen in real time.
@@ -66,7 +66,7 @@ export function Hero() {
               href="https://bitsofknowledge.de"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-midnight-300 hover:text-btc-orange transition-colors"
+              className="font-bold text-bok-muted transition-colors hover:text-bitcoin-orange"
               style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif", letterSpacing: '0.08em' }}
             >
               A BITS OF KNOWLEDGE TOOL
@@ -87,10 +87,10 @@ export function Hero() {
           className="glass-card p-5 sm:p-7"
         >
           <div className="flex items-center justify-between mb-5">
-            <p className="text-sm text-midnight-400">
+            <p className="text-sm text-bok-muted">
               Since you opened this page ({elapsed}s)
             </p>
-            <span className="text-xs font-mono text-fiat-400">Live</span>
+            <span className="font-mono text-xs text-emerald-700">Live</span>
           </div>
 
           <div className="mb-6">
@@ -104,21 +104,21 @@ export function Hero() {
           <div className="mb-5">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-bitcoin-400" strokeWidth={1.75} />
-                <span className="text-sm font-semibold text-bitcoin-300">BTC mined</span>
+                <Zap className="h-4 w-4 text-bitcoin-orange" strokeWidth={1.75} />
+                <span className="text-sm font-semibold text-bitcoin-orange">BTC mined</span>
               </div>
-              <span className="text-lg sm:text-xl font-mono font-bold text-bitcoin-300">
+              <span className="font-mono text-lg font-bold text-bitcoin-orange sm:text-xl">
                 {btcMined.toFixed(6)}
               </span>
             </div>
-            <div className="relative h-2 rounded-full overflow-hidden bg-midnight-800/60">
+            <div className="relative h-2 overflow-hidden rounded-full bg-slate-200">
               <motion.div
-                className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-bitcoin-700 via-bitcoin-500 to-bitcoin-300"
+                className="absolute inset-y-0 left-0 rounded-full bg-bitcoin-orange"
                 style={{ width: `${btcBarProgress}%` }}
                 transition={{ duration: 0.05 }}
               />
             </div>
-            <p className="text-xs text-midnight-500 mt-1.5">
+            <p className="mt-1.5 text-xs text-bok-muted">
               ~{Math.round(emission.satsPerSecond).toLocaleString()} sats/sec
             </p>
             {btcWhole > 0 && (
@@ -132,9 +132,9 @@ export function Hero() {
             )}
           </div>
 
-          <div className="pt-4 border-t border-midnight-700/40">
-            <p className="text-sm text-midnight-300">
-              <span className="font-mono font-bold text-fiat-400 text-lg">{ratio > 0 ? `${ratio}x` : '0x'}</span>
+          <div className="border-t border-bok-border pt-4">
+            <p className="text-sm text-bok-text">
+              <span className="font-mono text-lg font-bold text-emerald-700">{ratio > 0 ? `${ratio}x` : '0x'}</span>
               {' '}more USD (BTC-equivalent) printed than BTC mined
             </p>
           </div>

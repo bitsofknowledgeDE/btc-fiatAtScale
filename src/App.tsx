@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { LayoutGroup } from 'framer-motion';
+import { trackToolInteraction } from './utils/analytics';
 import { Hero } from './components/Hero';
 import { SupplySnapshot } from './components/SupplySnapshot';
 import { SupplyChart } from './components/SupplyChart';
@@ -14,12 +16,18 @@ import { BtcPriceProvider } from './context/BtcPriceContext';
 import { BtcNetworkProvider } from './context/BtcNetworkContext';
 
 function App() {
+  useEffect(() => {
+    const onInteract = () => trackToolInteraction('fiatatscale', 'interact');
+    document.addEventListener('pointerdown', onInteract, { once: true });
+    return () => document.removeEventListener('pointerdown', onInteract);
+  }, []);
+
   return (
     <BtcPriceProvider>
       <BtcNetworkProvider>
         <LiveRaceProvider>
         <LayoutGroup id="live-race">
-          <div className="relative min-h-[100dvh] bg-bok-bg text-midnight-100 flex flex-col">
+          <div className="relative flex min-h-[100dvh] flex-col bg-bok-surface text-bok-text">
             <Navbar />
             <main className="relative flex-1">
               <Hero />
