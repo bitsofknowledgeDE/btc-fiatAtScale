@@ -15,6 +15,7 @@ import { LiveRaceProvider } from './context/LiveRaceContext';
 import { BtcPriceProvider } from './context/BtcPriceContext';
 import { BtcNetworkProvider } from './context/BtcNetworkContext';
 
+import { FaqSection } from './components/FaqSection';
 function App() {
   useEffect(() => {
     const onInteract = () => trackToolInteraction('fiatatscale', 'interact');
@@ -46,6 +47,7 @@ function App() {
               </div>
               <ComparisonTable />
             </main>
+            <FaqSection />
             <Footer />
           </div>
         </LayoutGroup>
