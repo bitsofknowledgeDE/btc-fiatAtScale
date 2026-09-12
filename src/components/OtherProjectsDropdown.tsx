@@ -28,7 +28,7 @@ export function OtherProjectsDropdown() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="flex items-center gap-1.5 rounded-lg border border-bok-border bg-white px-3 py-1.5 text-sm font-medium text-bok-muted transition-colors duration-200 hover:border-bitcoin-orange/30 hover:bg-bok-surface hover:text-bok-text"
+        className="flex items-center gap-1.5 rounded-lg border border-bok-border bg-bok-card px-3 py-1.5 text-sm font-medium text-bok-muted transition-colors duration-200 hover:border-bitcoin-orange/30 hover:bg-bok-surface hover:text-bok-text"
         aria-expanded={open}
         aria-haspopup="menu"
       >
@@ -44,13 +44,11 @@ export function OtherProjectsDropdown() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-[60] mt-2 w-64 overflow-hidden rounded-xl border border-bok-border bg-white shadow-xl shadow-slate-900/10"
+          className="absolute right-0 top-full z-[60] mt-2 w-64 overflow-hidden rounded-xl border border-bok-border bg-bok-card"
+          style={{ boxShadow: '0 16px 32px rgb(var(--bok-text) / 0.12)' }}
         >
           <div className="border-b border-bok-border px-3 py-2">
-            <p
-              className="text-[10px] font-semibold uppercase tracking-widest text-bok-muted"
-              style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}
-            >
+            <p className="font-heading text-[10px] font-semibold uppercase tracking-widest text-bok-muted">
               More from Bits of Knowledge
             </p>
           </div>

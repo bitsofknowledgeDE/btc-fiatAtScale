@@ -1,3 +1,11 @@
+# BoK standard netlify.toml (CI/web/templates/netlify.toml, WP-2.1).
+# Site-specific part: the three www/http -> apex 301 redirects for
+# fiatatscale.com. No `/* -> /index.html 200` catch-all — the site has no
+# client-side routes, so the catch-all only turned real 404s into soft 200s
+# (audit finding B4, 2026-09-08).
+# No Content-Security-Policy on purpose: Supabase, Google Fonts and Plausible
+# would all need allow-listing and a wrong CSP breaks the page silently.
+
 [build]
 command = "npm run build"
 publish = "dist"
@@ -23,7 +31,15 @@ to = "https://fiatatscale.com/:splat"
 status = 301
 force = true
 
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

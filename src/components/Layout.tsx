@@ -1,7 +1,19 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import type { ComponentType } from 'react';
-import * as Icons from 'lucide-react';
-import { Scale } from 'lucide-react';
+import {
+  ExternalLink,
+  Github,
+  Globe,
+  Instagram,
+  Linkedin,
+  Mail,
+  MessageCircle,
+  Rss,
+  Scale,
+  Send,
+  Share2,
+  Twitter,
+  Youtube,
+} from 'lucide-react';
 import { BokHeader } from '../../../../CI/web/BokHeader';
 import { BokFooter } from '../../../../CI/web/BokFooter';
 import { UsdPrintedLive } from './UsdPrintedLive';
@@ -10,10 +22,29 @@ import { useLiveRace } from '../context/LiveRaceContext';
 import { useSocialLinks } from '../hooks/useSocialLinks';
 
 const navLinks = [
-  { href: '#supply', label: 'Supply' },
+  { href: '#emission', label: 'Emission' },
   { href: '#scale', label: 'Scale' },
-  { href: '#projection', label: 'Projection' },
+  { href: '#inflation', label: 'Inflation' },
 ];
+
+/**
+ * Explicit icon map. A `import * as Icons from 'lucide-react'` used to pull the
+ * whole library into the bundle for four social links (the same finding as on
+ * btc-realATH, WP-2.4).
+ */
+const SOCIAL_ICONS: Record<string, ComponentType<{ className?: string }>> = {
+  Youtube,
+  Twitter,
+  Globe,
+  Share2,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MessageCircle,
+  Rss,
+  Send,
+};
 
 export function Navbar() {
   const { navCounterVisible } = useLiveRace();
@@ -26,20 +57,14 @@ export function Navbar() {
         toolType="VISUALIZER"
       >
         <div className="flex items-center gap-1 sm:gap-2">
-          <AnimatePresence>
-            {navCounterVisible && (
-              <motion.div
-                key="nav-usd-inline"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                transition={{ duration: 0.2 }}
-                className="hidden w-64 lg:block"
-              >
-                <UsdPrintedLive variant="nav" morphAmount />
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <div
+            className={`hidden transition-opacity duration-200 lg:block ${
+              navCounterVisible ? 'w-64 opacity-100' : 'pointer-events-none w-0 opacity-0'
+            }`}
+            aria-hidden={!navCounterVisible}
+          >
+            {navCounterVisible && <UsdPrintedLive />}
+          </div>
 
           <nav className="hidden items-center sm:flex" aria-label="Primary navigation">
             {navLinks.map((link) => (
@@ -56,21 +81,13 @@ export function Navbar() {
         </div>
       </BokHeader>
 
-      <AnimatePresence>
-        {navCounterVisible && (
-          <motion.div
-            key="nav-usd-mobile"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            className="border-b border-bok-border bg-white px-4 py-2 lg:hidden"
-          >
-            <div className="mx-auto max-w-6xl">
-              <UsdPrintedLive variant="nav" morphAmount={false} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {navCounterVisible && (
+        <div className="border-b border-bok-border bg-bok-card px-4 py-2 lg:hidden">
+          <div className="mx-auto max-w-6xl">
+            <UsdPrintedLive />
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -79,8 +96,8 @@ export function Footer() {
   const { socialLinks } = useSocialLinks();
 
   const getIcon = (iconName: string) => {
-    const Icon = (Icons as unknown as Record<string, ComponentType<{ className?: string }>>)[iconName];
-    return Icon ? <Icon className="h-5 w-5" /> : <Icons.ExternalLink className="h-5 w-5" />;
+    const Icon = SOCIAL_ICONS[iconName] ?? ExternalLink;
+    return <Icon className="h-5 w-5" />;
   };
 
   return (
@@ -103,15 +120,17 @@ export function Footer() {
       )}
 
       <div className="mx-auto mt-8 max-w-2xl space-y-2 text-center">
-        <p className="text-xs text-slate-400">
-          Data from Federal Reserve FRED and Bitcoin protocol specs. Projections follow historical trends.
+        <p className="text-xs text-white/55">
+          US money-supply figures from the Federal Reserve (FRED); Bitcoin supply from the
+          protocol issuance schedule. Everything past the last reported year is a scenario, not
+          a forecast.
         </p>
-        <p className="text-xs leading-relaxed text-slate-400">
+        <p className="text-xs leading-relaxed text-white/55">
           For educational purposes only. Not financial advice. Always do your own research.
         </p>
       </div>
 
-      <p className="mt-6 text-center text-xs text-slate-500">
+      <p className="mt-6 text-center text-xs text-white/40">
         &copy; {new Date().getFullYear()} Bits of Knowledge. All rights reserved.
       </p>
     </BokFooter>

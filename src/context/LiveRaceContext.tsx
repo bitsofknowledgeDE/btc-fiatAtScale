@@ -23,6 +23,9 @@ export interface LiveRaceState {
   btcBarProgress: number;
   ratio: number;
   btcPriceUsd: number;
+  /** True only when the price service answered — gates every price-derived
+   *  figure so a stale fallback is never shown as a live price. */
+  priceAvailable: boolean;
   navCounterVisible: boolean;
   counterAnchorRef: (node: HTMLDivElement | null) => void;
   formatUsd: (num: number) => string;
@@ -31,7 +34,7 @@ export interface LiveRaceState {
 const LiveRaceContext = createContext<LiveRaceState | null>(null);
 
 export function LiveRaceProvider({ children }: { children: ReactNode }) {
-  const { btcPriceUsd } = useBtcPrice();
+  const { btcPriceUsd, isLivePrice } = useBtcPrice();
   const { satsPerSecond } = useBtcNetworkEmission();
   const btcPriceRef = useRef(btcPriceUsd);
   btcPriceRef.current = btcPriceUsd;
@@ -115,6 +118,7 @@ export function LiveRaceProvider({ children }: { children: ReactNode }) {
         btcBarProgress,
         ratio,
         btcPriceUsd,
+        priceAvailable: isLivePrice,
         navCounterVisible,
         counterAnchorRef,
         formatUsd,

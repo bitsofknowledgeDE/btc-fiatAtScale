@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -8,10 +9,12 @@ import {
 import { FALLBACK_BTC_PRICE_USD, fetchBitcoinPrice } from '../lib/bitcoin-price';
 
 interface BtcPriceState {
+  /** Never render this as a live price unless `isLivePrice` is true. */
   btcPriceUsd: number;
   priceSource: string | null;
   isLivePrice: boolean;
   loading: boolean;
+  refetch: () => void;
 }
 
 const BtcPriceContext = createContext<BtcPriceState | null>(null);
@@ -21,9 +24,13 @@ export function BtcPriceProvider({ children }: { children: ReactNode }) {
   const [priceSource, setPriceSource] = useState<string | null>(null);
   const [isLivePrice, setIsLivePrice] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  const refetch = useCallback(() => setReloadKey((k) => k + 1), []);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
 
     (async () => {
       try {
@@ -45,10 +52,12 @@ export function BtcPriceProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
 
   return (
-    <BtcPriceContext.Provider value={{ btcPriceUsd, priceSource, isLivePrice, loading }}>
+    <BtcPriceContext.Provider
+      value={{ btcPriceUsd, priceSource, isLivePrice, loading, refetch }}
+    >
       {children}
     </BtcPriceContext.Provider>
   );

@@ -1,3 +1,9 @@
+/**
+ * Internal-math fallback only — it keeps the live-race bars moving when the
+ * price service is down. The UI must NOT present it as a current price: every
+ * price-derived figure is gated on `isLivePrice` and the page shows
+ * `BokDataNotice` instead (decision 2026-09-08).
+ */
 export const FALLBACK_BTC_PRICE_USD = 103_000;
 
 export interface BitcoinPriceResponse {

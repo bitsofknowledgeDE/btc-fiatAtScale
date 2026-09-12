@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   LineChart,
@@ -12,8 +11,10 @@ import {
   ReferenceLine,
   Brush,
 } from 'recharts';
+import { BokDataNotice } from '../../../../CI/web/BokDataNotice';
 import {
   BTC_SUPPLY_YOY_CHART_FROM,
+  CURRENT_YEAR,
   getLatestBtcSupplyInflationYoY,
   supplyData,
 } from '../data/supplyData';
@@ -22,19 +23,21 @@ import {
   TRUFLATION_PEAK_YOY,
   TRUFLATION_PEAK_LABEL,
   TRUFLATION_START_YEAR,
+  TRUFLATION_END_YEAR,
+  TRUFLATION_LATEST_YOY,
+  TRUFLATION_SOURCE_LABEL,
   EXTENDED_HISTORY_START_YEAR,
   getTruflationPoint,
 } from '../data/truflationInflation';
-import { useTruflationInflation } from '../hooks/useTruflationInflation';
 import {
   formatBtcPriceUsd,
   useBitcoinHistoricalPrices,
 } from '../hooks/useBitcoinHistoricalPrices';
 import { useBtcPrice } from '../context/BtcPriceContext';
+import { chartColor } from '../lib/chart-colors';
 import { SectionHeader } from './SectionHeader';
 
 const truflationByYear = new Map(truflationAnnualData.map((p) => [p.year, p]));
-const currentYear = new Date().getFullYear();
 
 interface ChartRow {
   year: number;
@@ -55,7 +58,7 @@ function buildChartRows(
     .forEach((d) => years.add(d.year));
   truflationAnnualData.forEach((p) => years.add(p.year));
   priceByYear.forEach((_, year) => years.add(year));
-  years.add(currentYear);
+  years.add(CURRENT_YEAR);
 
   return Array.from(years)
     .sort((a, b) => a - b)
@@ -64,7 +67,7 @@ function buildChartRows(
       const supply = supplyData.find((d) => d.year === year);
       const historicalPrice = priceByYear.get(year);
       const btcPrice =
-        year === currentYear && liveBtcPriceUsd > 0
+        year === CURRENT_YEAR && liveBtcPriceUsd > 0
           ? liveBtcPriceUsd
           : historicalPrice ?? null;
 
@@ -110,29 +113,29 @@ function InflationTooltip({
   const row = payload[0]?.payload;
 
   return (
-    <div className="bok-card p-4 border border-bok-border">
-      <p className="mb-2 text-sm font-semibold text-bok-text">{label}</p>
+    <div className="bok-card border border-bok-border p-4">
+      <p className="mb-2 text-sm font-semibold tabular-nums text-bok-text">{label}</p>
       {payload.map((entry) => {
         if (entry.value == null) return null;
         if (entry.dataKey === 'usd') {
           const labelText =
             row?.usdSource === 'm2' ? 'USD inflation (M2 YoY)' : 'Truflation CPI';
           return (
-            <p key={entry.dataKey} className="text-sm text-emerald-700">
+            <p key={entry.dataKey} className="text-sm tabular-nums text-series-3">
               {labelText}: {entry.value.toFixed(1)}%
             </p>
           );
         }
         if (entry.dataKey === 'btc') {
           return (
-            <p key={entry.dataKey} className="text-sm text-bitcoin-orange">
+            <p key={entry.dataKey} className="text-sm tabular-nums text-bitcoin-orange">
               BTC circulation YoY: {entry.value.toFixed(2)}%
             </p>
           );
         }
         if (entry.dataKey === 'btcPrice') {
           return (
-            <p key={entry.dataKey} className="text-sm text-blue-700">
+            <p key={entry.dataKey} className="text-sm tabular-nums text-series-2">
               BTC price: {formatBtcPriceUsd(entry.value)}
             </p>
           );
@@ -140,7 +143,7 @@ function InflationTooltip({
         return null;
       })}
       {point?.blsCpiYoY != null && (
-        <p className="text-xs text-bok-muted mt-2">
+        <p className="mt-2 text-xs tabular-nums text-bok-muted">
           BLS CPI (official): {point.blsCpiYoY.toFixed(1)}%
         </p>
       )}
@@ -157,22 +160,33 @@ function priceTick(value: number) {
 
 export function InflationComparison() {
   const { ref, inView } = useInView({ threshold: 0.15, triggerOnce: true });
-  const { currentYoY, asOfDate, isLive, loading: truflationLoading } = useTruflationInflation();
-  const { priceByYear, loading: pricesLoading } = useBitcoinHistoricalPrices();
-  const { btcPriceUsd } = useBtcPrice();
+  const {
+    priceByYear,
+    loading: pricesLoading,
+    error: pricesError,
+    refetch: refetchPrices,
+  } = useBitcoinHistoricalPrices();
+  const { btcPriceUsd, isLivePrice } = useBtcPrice();
 
   const chartData = useMemo(
-    () => buildChartRows(priceByYear, btcPriceUsd),
-    [priceByYear, btcPriceUsd],
+    () => buildChartRows(priceByYear, isLivePrice ? btcPriceUsd : 0),
+    [priceByYear, btcPriceUsd, isLivePrice],
   );
 
   const brushStartIndex = Math.max(
     0,
     chartData.findIndex((d) => d.year >= TRUFLATION_START_YEAR),
   );
-  const brushEndIndex = chartData.length - 1;
+  const brushEndIndex = Math.max(brushStartIndex, chartData.length - 1);
 
-  const currentLabel = truflationLoading ? '…' : `${currentYoY.toFixed(1)}%`;
+  /* Colours resolved from the BoK series tokens — no chart hex in this site
+     (CI/web decision 2026-09-08). */
+  const fiat = chartColor.fiat();
+  const bitcoin = chartColor.bitcoin();
+  const price = chartColor.price();
+  const grid = chartColor.grid();
+  const axis = chartColor.axis();
+  const axisLine = chartColor.axis(0.6);
 
   const latestBtcSupplyYoY = getLatestBtcSupplyInflationYoY();
   const highlights = [
@@ -182,74 +196,74 @@ export function InflationComparison() {
       accent: 'fiat' as const,
     },
     {
-      value: currentLabel,
-      label: isLive
-        ? `Truflation CPI now${asOfDate ? ` (${asOfDate})` : ''}`
-        : 'Truflation CPI (latest annual est.)',
+      value: `${TRUFLATION_LATEST_YOY.toFixed(1)}%`,
+      label: `Truflation CPI, ${TRUFLATION_END_YEAR} annual figure`,
       accent: 'fiat' as const,
     },
     {
-      value: pricesLoading ? '…' : formatBtcPriceUsd(btcPriceUsd),
-      label: `BTC price now · ${latestBtcSupplyYoY.toFixed(2)}% circulation YoY`,
+      value: isLivePrice ? formatBtcPriceUsd(btcPriceUsd) : '—',
+      label: isLivePrice
+        ? `BTC price now · ${latestBtcSupplyYoY.toFixed(2)}% circulation YoY`
+        : `Live BTC price unavailable · ${latestBtcSupplyYoY.toFixed(2)}% circulation YoY`,
       accent: 'bitcoin' as const,
     },
   ];
 
   return (
     <section ref={ref} className="section-shell bg-bok-surface">
-      <div className="max-w-6xl mx-auto">
+      <div className="mx-auto max-w-6xl">
         <SectionHeader
           kicker="04"
           kickerLabel="Inflation"
           align="center"
           inView={inView}
           title={<>Inflation <span className="gradient-text-fiat">rates</span></>}
-          subtitle="Truflation CPI for USD vs. BTC circulation growth (YoY, from 2013) — plus BTC dollar price since 2010."
+          subtitle={`Truflation CPI for the dollar against Bitcoin's circulation growth (YoY, from ${BTC_SUPPLY_YOY_CHART_FROM}) — plus the BTC dollar price since ${TRUFLATION_START_YEAR}.`}
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="bok-card p-5 sm:p-8 mb-6"
+        <div
+          className={`reveal ${inView ? 'reveal-in' : ''} bok-card mb-6 p-5 sm:p-8`}
+          style={{ transitionDelay: '0.1s' }}
         >
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mb-6">
+          <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2">
             <div className="flex items-center gap-2">
-              <div className="h-2.5 w-2.5 rounded-full bg-emerald-600" />
+              <div className="h-2.5 w-2.5 rounded-full bg-series-3" />
               <span className="text-sm text-bok-text">Truflation CPI YoY (%)</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-2.5 w-2.5 rounded-full bg-bitcoin-orange" />
               <span className="text-sm text-bok-text">BTC circulation YoY (%)</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="h-2.5 w-2.5 rounded-full bg-blue-600" />
-              <span className="text-sm text-bok-text">BTC price (USD, log scale)</span>
-            </div>
+            {!pricesError && (
+              <div className="flex items-center gap-2">
+                <div className="h-2.5 w-2.5 rounded-full bg-series-2" />
+                <span className="text-sm text-bok-text">BTC price (USD, log scale)</span>
+              </div>
+            )}
           </div>
 
           <div className="h-[420px] sm:h-[480px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 10, right: 48, left: 4, bottom: 4 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={grid} />
                 <XAxis
                   dataKey="year"
                   type="number"
                   domain={['dataMin', 'dataMax']}
                   allowDecimals={false}
-                  stroke="#94A3B8"
-                  tick={{ fill: '#64748B', fontSize: 12 }}
+                  stroke={axisLine}
+                  tick={{ fill: axis, fontSize: 12 }}
                   interval="preserveStartEnd"
                 />
                 <YAxis
                   yAxisId="pct"
-                  stroke="#94A3B8"
-                  tick={{ fill: '#64748B', fontSize: 12 }}
+                  stroke={axisLine}
+                  tick={{ fill: axis, fontSize: 12 }}
                   label={{
                     value: 'Inflation (%)',
                     angle: -90,
                     position: 'insideLeft',
-                    fill: '#64748B',
+                    fill: axis,
                     fontSize: 11,
                   }}
                 />
@@ -258,61 +272,63 @@ export function InflationComparison() {
                   orientation="right"
                   scale="log"
                   domain={[0.05, 'auto']}
-                  stroke="#94A3B8"
-                  tick={{ fill: '#64748B', fontSize: 11 }}
+                  stroke={axisLine}
+                  tick={{ fill: axis, fontSize: 11 }}
                   tickFormatter={priceTick}
                   label={{
                     value: 'BTC price',
                     angle: 90,
                     position: 'insideRight',
-                    fill: '#64748B',
+                    fill: axis,
                     fontSize: 11,
                   }}
                 />
                 <Tooltip content={<InflationTooltip />} />
                 <ReferenceLine
-                  x={currentYear}
-                  stroke="#94A3B8"
+                  x={CURRENT_YEAR}
+                  stroke={axisLine}
                   strokeDasharray="5 5"
-                  label={{ value: 'Now', fill: '#64748B', fontSize: 11 }}
+                  label={{ value: 'Now', fill: axis, fontSize: 11 }}
                 />
-                <ReferenceLine yAxisId="pct" y={0} stroke="#94A3B8" />
+                <ReferenceLine yAxisId="pct" y={0} stroke={axisLine} />
                 <Line
                   yAxisId="pct"
                   type="monotone"
                   dataKey="usd"
-                  stroke="#16865A"
+                  stroke={fiat}
                   strokeWidth={2.5}
                   connectNulls
-                  dot={{ fill: '#16865A', r: 3 }}
-                  activeDot={{ r: 5, fill: '#34A373' }}
+                  dot={{ fill: fiat, r: 3 }}
+                  activeDot={{ r: 5, fill: chartColor.fiat(0.7) }}
                 />
                 <Line
                   yAxisId="pct"
                   type="monotone"
                   dataKey="btc"
-                  stroke="#F7931A"
+                  stroke={bitcoin}
                   strokeWidth={2.5}
                   connectNulls
-                  dot={{ fill: '#F7931A', r: 3 }}
-                  activeDot={{ r: 5, fill: '#FDBA74' }}
+                  dot={{ fill: bitcoin, r: 3 }}
+                  activeDot={{ r: 5, fill: chartColor.bitcoin(0.7) }}
                 />
-                <Line
-                  yAxisId="price"
-                  type="monotone"
-                  dataKey="btcPrice"
-                  stroke="#2563EB"
-                  strokeWidth={2}
-                  connectNulls
-                  dot={{ fill: '#2563EB', r: 2.5 }}
-                  activeDot={{ r: 4, fill: '#60A5FA' }}
-                />
+                {!pricesError && (
+                  <Line
+                    yAxisId="price"
+                    type="monotone"
+                    dataKey="btcPrice"
+                    stroke={price}
+                    strokeWidth={2}
+                    connectNulls
+                    dot={{ fill: price, r: 2.5 }}
+                    activeDot={{ r: 4, fill: chartColor.price(0.7) }}
+                  />
+                )}
                 {chartData.length > 0 && (
                   <Brush
                     dataKey="year"
                     height={32}
-                    stroke="#CBD5E1"
-                    fill="#FFFFFF"
+                    stroke={grid}
+                    fill={chartColor.card()}
                     travellerWidth={10}
                     startIndex={brushStartIndex}
                     endIndex={brushEndIndex}
@@ -322,29 +338,49 @@ export function InflationComparison() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <p className="mt-4 border-t border-bok-border pt-4 text-xs leading-relaxed text-bok-muted">
+            {TRUFLATION_SOURCE_LABEL}. Bitcoin circulation growth follows the protocol issuance
+            schedule; the dollar price series comes from the Bits of Knowledge price service.
+          </p>
+
+          {pricesError && (
+            <div className="mt-4">
+              <BokDataNotice lang="en" onRetry={refetchPrices}>
+                <p style={{ margin: 0 }}>
+                  The historical bitcoin price series is not reachable right now, so the price
+                  line is hidden rather than drawn from an old snapshot. The inflation and
+                  circulation series are unaffected.
+                </p>
+              </BokDataNotice>
+            </div>
+          )}
+          {pricesLoading && !pricesError && (
+            <p className="mt-2 text-xs text-bok-muted">Loading the price series…</p>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {highlights.map((item, i) => (
-            <motion.div
+            <div
               key={item.label}
-              initial={{ opacity: 0, y: 16 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 + i * 0.08 }}
-              className="bok-card p-5"
+              className={`reveal ${inView ? 'reveal-in' : ''} bok-card p-5`}
+              style={{ transitionDelay: `${0.2 + i * 0.08}s` }}
             >
               <p
                 className={`data-metric mb-2 ${
-                  item.accent === 'fiat' ? 'text-emerald-700' : 'text-bitcoin-orange'
+                  item.accent === 'fiat' ? 'text-series-3' : 'text-bitcoin-orange'
                 }`}
               >
                 {item.value}
               </p>
-              <p className="text-sm text-bok-muted leading-relaxed">{item.label}</p>
-            </motion.div>
+              <p className="text-sm leading-relaxed text-bok-muted">{item.label}</p>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
 }
+
+export default InflationComparison;

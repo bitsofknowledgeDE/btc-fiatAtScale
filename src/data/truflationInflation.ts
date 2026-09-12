@@ -1,6 +1,12 @@
 /**
  * Truflation US CPI YoY (%), annual figures.
  * Backtested series (2010+) from Truflation's independent daily index — not BLS / M2 growth.
+ *
+ * This is a STATIC dataset. The site used to try a client-side call to
+ * api.truflation.com with `VITE_TRUFULATION_API_KEY`, which would have shipped
+ * the key in the browser bundle (audit finding B5, 2026-09-08); that path is
+ * gone and the UI labels the series as the annual dataset it is.
+ *
  * @see https://truflation.com/marketplace/us-inflation-rate
  */
 export interface TruflationAnnualPoint {
@@ -40,8 +46,13 @@ export const TRUFLATION_START_YEAR = truflationAnnualData[0].year;
 export const TRUFLATION_END_YEAR =
   truflationAnnualData[truflationAnnualData.length - 1].year;
 
-export const TRUFLATION_FALLBACK_CURRENT_YOY =
+/** Most recent annual figure in the dataset. */
+export const TRUFLATION_LATEST_YOY =
   truflationAnnualData[truflationAnnualData.length - 1].truflationCpiYoY;
+
+/** Honest source label for the UI — no live feed behind this series. */
+export const TRUFLATION_SOURCE_LABEL =
+  'Truflation US CPI, annual series (static dataset), next to the official BLS CPI';
 
 export function truflationAverageSince(year: number): number {
   const points = truflationAnnualData.filter((p) => p.year >= year);

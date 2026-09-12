@@ -1,6 +1,5 @@
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import { useMemo, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useCountUp } from '../hooks/useCountUp';
 import { SectionHeader } from './SectionHeader';
 import { useBtcNetwork } from '../context/BtcNetworkContext';
@@ -27,24 +26,32 @@ function formatUsdDaily(usdPerSecond: number): string {
   return `$${Math.round(daily).toLocaleString('en-US')} printed`;
 }
 
-function DotGrid({ count, color, maxDisplay }: { count: number; color: 'fiat' | 'bitcoin'; maxDisplay: number }) {
+/**
+ * Dot grid. The count-up already reveals the dots over time, so each dot only
+ * needs the one-shot `.pop-in` CSS animation — the old per-dot framer-motion
+ * `motion.div` carried the whole motion library for a scale-in (WP-2.4).
+ */
+function DotGrid({
+  count,
+  color,
+  maxDisplay,
+}: {
+  count: number;
+  color: 'fiat' | 'bitcoin';
+  maxDisplay: number;
+}) {
   const displayed = Math.min(count, maxDisplay);
-  const colorClass = color === 'fiat' ? 'bg-emerald-600' : 'bg-bitcoin-orange';
+  const dotClass = color === 'fiat' ? 'bg-series-3' : 'bg-bitcoin-orange';
+  const textClass = color === 'fiat' ? 'text-series-3' : 'text-bitcoin-orange';
 
   return (
-    <div className="flex flex-wrap gap-[3px] justify-start max-h-[180px] overflow-hidden">
+    <div className="flex max-h-[180px] flex-wrap justify-start gap-[3px] overflow-hidden">
       {Array.from({ length: displayed }).map((_, i) => (
-        <motion.div
-          key={i}
-          className={`w-[5px] h-[5px] rounded-full ${colorClass}`}
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.85 }}
-          transition={{ delay: Math.min(i * 0.002, 0.8), duration: 0.25 }}
-        />
+        <span key={i} className={`pop-in h-[5px] w-[5px] rounded-full opacity-85 ${dotClass}`} />
       ))}
       {count > maxDisplay && (
-        <span className={`mt-2 w-full text-xs ${color === 'fiat' ? 'text-emerald-700' : 'text-bitcoin-orange'}`}>
-          +{(count - maxDisplay).toLocaleString()} more
+        <span className={`mt-2 w-full text-xs tabular-nums ${textClass}`}>
+          +{(count - maxDisplay).toLocaleString('en-US')} more
         </span>
       )}
     </div>
@@ -96,7 +103,7 @@ export function ScaleVisualization() {
 
   return (
     <section ref={ref} className="section-shell">
-      <div className="max-w-6xl mx-auto">
+      <div className="mx-auto max-w-6xl">
         <SectionHeader
           kicker="03"
           kickerLabel="Scale"
@@ -106,10 +113,11 @@ export function ScaleVisualization() {
           subtitle="Each dot is value created. Compare USD printing density to Bitcoin mining."
         />
 
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="mb-10 flex flex-wrap gap-2">
           {scales.map((s, i) => (
             <button
               key={s.id}
+              type="button"
               onClick={() => setActiveScale(i)}
               className={`pill-button ${activeScale === i ? 'pill-button-active' : 'pill-button-inactive'}`}
             >
@@ -118,41 +126,30 @@ export function ScaleVisualization() {
           ))}
         </div>
 
-        <motion.div
-          key={scale.id}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5"
-        >
-          <div className="glass-card p-6 sm:p-8 relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent" />
+        <div key={scale.id} className="grid grid-cols-1 gap-5 lg:grid-cols-[1.4fr_1fr]">
+          <div className="bok-card relative overflow-hidden p-6 sm:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-series-3/10 to-transparent" />
             <div className="relative">
-              <h3 className="mb-1 text-xl font-bold text-emerald-700">{scale.usdLabel}</h3>
+              <h3 className="mb-1 text-xl font-bold text-series-3">{scale.usdLabel}</h3>
               <p className="mb-6 text-sm text-bok-muted">US Dollar</p>
               <DotGrid count={Math.floor(usdCount)} color="fiat" maxDisplay={500} />
             </div>
           </div>
 
-          <div className="glass-card p-6 sm:p-8 relative overflow-hidden">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent" />
+          <div className="bok-card relative overflow-hidden p-6 sm:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-bitcoin-orange/10 to-transparent" />
             <div className="relative">
               <h3 className="mb-1 text-xl font-bold text-bitcoin-orange">{scale.btcLabel}</h3>
               <p className="mb-6 text-sm text-bok-muted">Bitcoin</p>
               <DotGrid count={Math.floor(btcCount)} color="bitcoin" maxDisplay={500} />
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.p
-          key={scale.description}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mt-8 max-w-xl text-lg leading-relaxed text-bok-text"
-        >
-          {scale.description}
-        </motion.p>
+        <p className="mt-8 max-w-xl text-lg leading-relaxed text-bok-text">{scale.description}</p>
       </div>
     </section>
   );
 }
+
+export default ScaleVisualization;

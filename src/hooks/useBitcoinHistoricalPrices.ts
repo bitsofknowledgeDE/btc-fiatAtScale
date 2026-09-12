@@ -1,63 +1,59 @@
-import { useEffect, useMemo, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { supabase, supabaseConfigured } from '../lib/supabase';
 
 export interface BitcoinYearlyPrice {
   year: number;
   bitcoinPriceUsd: number;
 }
 
-/** Fallback aligned with `global_bitcoin_historical_data` seed (2010–2025). */
-const FALLBACK_BTC_YEARLY: BitcoinYearlyPrice[] = [
-  { year: 2010, bitcoinPriceUsd: 0.06 },
-  { year: 2011, bitcoinPriceUsd: 4.72 },
-  { year: 2012, bitcoinPriceUsd: 13.51 },
-  { year: 2013, bitcoinPriceUsd: 805.9 },
-  { year: 2014, bitcoinPriceUsd: 320.19 },
-  { year: 2015, bitcoinPriceUsd: 430.05 },
-  { year: 2016, bitcoinPriceUsd: 968.23 },
-  { year: 2017, bitcoinPriceUsd: 14156.4 },
-  { year: 2018, bitcoinPriceUsd: 3674.85 },
-  { year: 2019, bitcoinPriceUsd: 7193.6 },
-  { year: 2020, bitcoinPriceUsd: 28990.1 },
-  { year: 2021, bitcoinPriceUsd: 46306.45 },
-  { year: 2022, bitcoinPriceUsd: 16547.5 },
-  { year: 2023, bitcoinPriceUsd: 42750 },
-  { year: 2024, bitcoinPriceUsd: 69420 },
-  { year: 2025, bitcoinPriceUsd: 105000 },
-];
-
+/**
+ * Yearly BTC closes from `global_bitcoin_historical_data`.
+ *
+ * There is deliberately NO baked-in fallback series: the old one ended in a
+ * hard-coded "2025: 105000" that the chart drew right next to the current year,
+ * so a dead data source looked like live data (decision 2026-09-08 — on API
+ * failure show a notice, never a stale number). On failure the hook returns an
+ * empty series plus `error`, and the caller renders `BokDataNotice` and drops
+ * the price series from the chart.
+ */
 export function useBitcoinHistoricalPrices() {
-  const [prices, setPrices] = useState<BitcoinYearlyPrice[]>(FALLBACK_BTC_YEARLY);
+  const [prices, setPrices] = useState<BitcoinYearlyPrice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [fromSupabase, setFromSupabase] = useState(false);
+  const [error, setError] = useState(!supabaseConfigured);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  const refetch = useCallback(() => setReloadKey((k) => k + 1), []);
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
 
     (async () => {
       try {
-        const { data, error } = await supabase
+        const { data, error: queryError } = await supabase
           .from('global_bitcoin_historical_data')
           .select('year, bitcoin_price')
           .gte('year', 2010)
           .order('year', { ascending: true });
 
-        if (error) throw error;
+        if (queryError) throw queryError;
         if (!data?.length) throw new Error('No bitcoin historical rows');
-
         if (cancelled) return;
+
         setPrices(
-          data.map((row) => ({
-            year: row.year,
-            bitcoinPriceUsd: Number(row.bitcoin_price),
-          })),
+          data
+            .map((row) => ({
+              year: Number(row.year),
+              bitcoinPriceUsd: Number(row.bitcoin_price),
+            }))
+            .filter((p) => Number.isFinite(p.year) && Number.isFinite(p.bitcoinPriceUsd)),
         );
-        setFromSupabase(true);
-      } catch (error) {
-        console.error('Error fetching bitcoin historical prices:', error);
+        setError(false);
+      } catch (err) {
+        console.error('Error fetching bitcoin historical prices:', err);
         if (!cancelled) {
-          setPrices(FALLBACK_BTC_YEARLY);
-          setFromSupabase(false);
+          setPrices([]);
+          setError(true);
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -67,18 +63,17 @@ export function useBitcoinHistoricalPrices() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [reloadKey]);
 
   const priceByYear = useMemo(
     () => new Map(prices.map((p) => [p.year, p.bitcoinPriceUsd])),
     [prices],
   );
 
-  return { prices, priceByYear, loading, fromSupabase };
+  return { prices, priceByYear, loading, error, refetch };
 }
 
 export function formatBtcPriceUsd(value: number): string {
   if (value >= 1000) return `$${Math.round(value).toLocaleString('en-US')}`;
-  if (value >= 1) return `$${value.toFixed(2)}`;
   return `$${value.toFixed(2)}`;
 }

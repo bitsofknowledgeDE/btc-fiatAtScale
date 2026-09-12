@@ -15,18 +15,12 @@
   }
 
   ::selection {
-    background-color: rgba(247, 147, 26, 0.25);
-    color: #0F172A;
+    background-color: rgb(var(--bitcoin-orange) / 0.25);
+    color: rgb(var(--bok-text));
   }
 }
 
 @layer components {
-  .glass-card,
-  .bok-card {
-    @apply rounded-2xl border border-bok-border bg-white;
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
-  }
-
   .gradient-text-bitcoin {
     @apply text-bitcoin-orange;
   }
@@ -36,28 +30,21 @@
   }
 
   .section-shell {
-    @apply px-4 py-20 sm:py-24;
+    @apply px-4 py-16 sm:py-20;
   }
 
   .section-heading {
-    @apply mb-4 font-heading text-3xl font-extrabold leading-tight tracking-tight text-bok-text sm:text-4xl lg:text-5xl;
+    @apply mb-4 font-heading text-3xl font-extrabold leading-tight tracking-tight text-bok-text sm:text-4xl;
   }
 
   .section-subtext {
     @apply text-base leading-relaxed text-bok-muted sm:text-lg;
   }
 
+  /* Numbers live in Inter with tabular figures — `font-mono` is reserved for
+     codes and hashes (CI/web decision 2026-09-08). */
   .data-metric {
-    @apply font-mono text-2xl font-bold tracking-tight sm:text-3xl;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center rounded-lg bg-bitcoin-orange px-5 py-2.5 font-heading text-sm font-bold text-white transition duration-200 hover:brightness-105 active:translate-y-px;
-    box-shadow: 0 6px 18px rgba(247, 147, 26, 0.22);
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center rounded-lg border border-bok-border bg-white px-5 py-2.5 text-sm font-medium text-bok-text transition duration-200 hover:bg-bok-surface active:translate-y-px;
+    @apply text-2xl font-bold tracking-tight tabular-nums sm:text-3xl;
   }
 
   .pill-button {
@@ -69,11 +56,60 @@
   }
 
   .pill-button-inactive {
-    @apply border-bok-border bg-white text-bok-muted hover:border-bitcoin-orange/30 hover:text-bok-text;
+    @apply border-bok-border bg-bok-card text-bok-muted hover:border-bitcoin-orange/30 hover:text-bok-text;
   }
 
   .compare-cell {
     @apply rounded-xl border p-4 transition-colors duration-200 sm:p-5;
+  }
+
+  /* Slider + number-field pair (reference:
+     btc-bitcoinsavingscalculator/src/index.css). */
+  .input-field {
+    @apply rounded-lg border border-bok-border bg-bok-card px-3 py-2 text-bok-text
+           placeholder-bok-muted transition-all duration-200 focus:border-bitcoin-orange
+           focus:outline-none focus:ring-2 focus:ring-bitcoin-orange/20;
+  }
+
+  .range-slider {
+    @apply h-1.5 cursor-pointer appearance-none rounded-full;
+    background: linear-gradient(
+      to right,
+      rgb(var(--bitcoin-orange)) 0%,
+      rgb(var(--bitcoin-orange)) var(--fill-percent, 50%),
+      rgb(var(--bok-border)) var(--fill-percent, 50%),
+      rgb(var(--bok-border)) 100%
+    );
+  }
+
+  .range-slider:focus {
+    @apply outline-none;
+  }
+
+  .range-slider::-webkit-slider-thumb {
+    @apply h-5 w-5 cursor-pointer appearance-none rounded-full border-2 border-bitcoin-orange bg-bok-card;
+    box-shadow: 0 2px 6px rgb(var(--bok-text) / 0.16);
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+
+  .range-slider::-webkit-slider-thumb:hover {
+    box-shadow: 0 4px 10px rgb(var(--bok-text) / 0.2);
+    transform: scale(1.08);
+  }
+
+  .range-slider::-webkit-slider-thumb:active {
+    transform: scale(1.12);
+  }
+
+  .range-slider::-moz-range-thumb {
+    @apply h-5 w-5 cursor-pointer rounded-full border-2 border-bitcoin-orange bg-bok-card;
+    box-shadow: 0 2px 6px rgb(var(--bok-text) / 0.16);
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+
+  .range-slider::-moz-range-track {
+    @apply h-1.5 appearance-none rounded-full;
+    background: transparent;
   }
 }
 
@@ -85,6 +121,45 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Scroll reveal without a motion library: `useInView` toggles `.reveal-in`
+     and the transition does the rest (WP-2.4 — framer-motion was 120 KB of
+     the old single chunk for what are plain fades). */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-left {
+    transform: translateX(-20px);
+  }
+
+  .reveal-right {
+    transform: translateX(20px);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Single element pop-in (mined-BTC chips, dot grids) */
+  .pop-in {
+    animation: bok-pop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes bok-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -99,6 +174,11 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }
 

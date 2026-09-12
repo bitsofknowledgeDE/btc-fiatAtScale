@@ -2,11 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo_icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#F7931A" />
+
+    <!-- BoK standard fonts (CI/web/templates/head-fonts-icons.html): two
+         preconnects + exactly ONE Google-Fonts stylesheet. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap">
+
+    <!-- BoK standard icon set (CI/web/icons, generated from the puzzle icon) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+
     <title>fiatAtScale - Money Supply vs Bitcoin's 21M Cap</title>
-    <meta name="description" content="Watch dollars being created against Bitcoin's fixed 21 million cap in real time. Live money-supply data from FRED, visualised at true scale." />
+    <meta name="description" content="Plot US dollar M2 against Bitcoin's fixed 21 million cap. Set a horizon and an annual M2 growth rate and see how much money supply exists per bitcoin." />
     <link rel="canonical" href="https://fiatatscale.com/" />
     <meta name="author" content="Bits of Knowledge" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -15,7 +27,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://fiatatscale.com/" />
     <meta property="og:title" content="fiatAtScale - Money Supply vs Bitcoin's 21M Cap" />
-    <meta property="og:description" content="Watch dollars being created against Bitcoin's fixed 21 million cap in real time. Live money-supply data from FRED, visualised at true scale." />
+    <meta property="og:description" content="Plot US dollar M2 against Bitcoin's fixed 21 million cap. Set a horizon and an annual M2 growth rate and see how much money supply exists per bitcoin." />
     <meta property="og:image" content="https://fiatatscale.com/og-image.png" />
     <meta property="og:site_name" content="fiatAtScale" />
     <meta property="og:locale" content="en_US" />
@@ -24,7 +36,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@BitsKnowledgeDE" />
     <meta name="twitter:title" content="fiatAtScale - Money Supply vs Bitcoin's 21M Cap" />
-    <meta name="twitter:description" content="Watch dollars being created against Bitcoin's fixed 21 million cap in real time. Live money-supply data from FRED, visualised at true scale." />
+    <meta name="twitter:description" content="Plot US dollar M2 against Bitcoin's fixed 21 million cap. Set a horizon and an annual M2 growth rate and see how much money supply exists per bitcoin." />
     <meta name="twitter:image" content="https://fiatatscale.com/og-image.png" />
 
     <script type="application/ld+json">
@@ -33,7 +45,7 @@
       "@type": "WebApplication",
       "name": "fiatAtScale",
       "url": "https://fiatatscale.com/",
-      "description": "Watch dollars being created against Bitcoin's fixed 21 million cap in real time. Live money-supply data from FRED, visualised at true scale.",
+      "description": "Interactive comparison of US dollar money-supply growth and Bitcoin's fixed 21 million cap: set a horizon and an M2 growth rate and see how much money supply exists per bitcoin.",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
@@ -47,18 +59,21 @@
     </script>
 
     <!-- Plausible Analytics (first-party subdomain, dashboard stays private) -->
+    <!-- Queue stub: events fired before the deferred script loads are queued and flushed by script.js -->
+    <script>window.plausible=window.plausible||function(){(window.plausible.q=window.plausible.q||[]).push(arguments)}</script>
     <script defer data-domain="fiatatscale.com" data-api="https://s.fiatatscale.com/api/event" src="https://s.fiatatscale.com/js/script.js"></script>
-      <script type="application/ld+json">
+
+    <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is fiatAtScale showing me?",
+      "name": "What does fiatAtScale show me?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Dollar money-supply expansion set against Bitcoin's fixed 21 million cap. A live counter estimates how many dollars have been created and how much Bitcoin has been mined since you opened the page, alongside the ratio between them."
+        "text": "How far the US dollar money supply runs ahead of Bitcoin's fixed 21 million cap. You set the chart window and an annual M2 growth rate; the chart replots both supplies and reports how much money supply exists per bitcoin at the chosen horizon. A live counter adds the dollars created and the bitcoin mined since you opened the page."
       }
     },
     {
@@ -74,15 +89,15 @@
       "name": "Where does the data come from?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "US money-supply figures come from FRED, the Federal Reserve's public data service. Bitcoin's supply follows the protocol's fixed issuance schedule, and the inflation view uses Truflation CPI."
+        "text": "US money-supply figures come from FRED, the Federal Reserve's public data service. Bitcoin's supply follows the protocol's fixed issuance schedule. The inflation section uses a static annual series of the Truflation US CPI index next to the official BLS CPI; the live bitcoin price comes from the Bits of Knowledge price service."
       }
     },
     {
       "@type": "Question",
-      "name": "What does the projection to 2050 assume?",
+      "name": "Is the projection a forecast?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It extends the historical M2 trend to roughly $85 trillion by 2050 while Bitcoin approaches its 21 million limit. The dollar side is a trend extrapolation and could be wrong. The Bitcoin side is defined by the protocol and is the only genuinely fixed number in the chart."
+        "text": "No. Everything past the last reported year is a scenario you control with the growth slider: the dollar supply is compounded at the rate you pick, which could be wrong in either direction. The Bitcoin side is not a scenario — it follows the protocol's issuance schedule and is the only genuinely fixed number in the chart."
       }
     },
     {
@@ -90,7 +105,7 @@
       "name": "Why do the halving details matter here?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Because they are the mechanism behind the flattening supply curve. Every four years Bitcoin's issuance rate halves, so the chart shows the dates, block rewards and annual issuance rates that produce it."
+        "text": "Because they are the mechanism behind the flattening supply curve. Every four years Bitcoin's issuance rate halves, so the page lists the dates, block rewards and annual issuance rates that produce it."
       }
     }
   ]
@@ -98,34 +113,41 @@
     </script>
   </head>
   <body>
-    <div id="root" style="min-height:100vh;background:#F4F6FA;color:#0F172A;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:32px 20px;box-sizing:border-box;">
+    <!-- #root carries NO attributes: React keeps them after mounting, and an
+         inline style on #root survives the mount (decision 2026-09-09). The
+         crawler/no-JS fallback below lives in a wrapper INSIDE #root and is
+         replaced when the app renders. -->
+    <div id="root">
+      <div style="min-height:100vh;background:#F4F6FA;color:#0F172A;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:32px 20px;box-sizing:border-box;">
       <main style="max-width:1024px;margin:0 auto;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;padding:28px;box-sizing:border-box;box-shadow:0 4px 18px rgba(15,23,42,0.06);">
-        <h1 style="margin:0 0 12px;font-size:32px;line-height:1.15;letter-spacing:-0.025em;color:#0F172A;">Fiat at Scale</h1>
-        <p style="margin:0 0 18px;color:#64748B;font-size:16px;line-height:1.6;max-width:800px;">fiatAtScale visualizes US dollar money-supply expansion against Bitcoin's fixed 21 million cap. It combines live issuance estimates, historical data, inflation metrics, and future projections to show how the two monetary systems diverge.</p>
+        <h1 style="margin:0 0 12px;font-size:32px;line-height:1.15;letter-spacing:-0.025em;color:#0F172A;">See how far the dollar supply runs ahead of Bitcoin's fixed 21 million</h1>
+        <p style="margin:0 0 18px;color:#64748B;font-size:16px;line-height:1.6;max-width:800px;">fiatAtScale plots US dollar M2 against Bitcoin's circulating supply on one chart. Pick a window and an annual growth rate for the dollar side, and the page shows both supplies, how much money supply exists per bitcoin, and how fast each side is being created right now.</p>
         <ul style="margin:0 0 20px;padding-left:22px;color:#334155;font-size:15px;line-height:1.65;">
-          <li style="margin:5px 0;">Tracks estimated USD M2 creation and BTC mined since the page was opened, including their BTC-equivalent ratio.</li>
-          <li style="margin:5px 0;">Charts US dollar M2 from 1960 through 2050 alongside Bitcoin's circulating supply and 21 million maximum.</li>
-          <li style="margin:5px 0;">Compares dollar creation with Bitcoin mining at second, daily, and yearly scales.</li>
-          <li style="margin:5px 0;">Plots Truflation CPI, Bitcoin circulation growth, and Bitcoin's USD price across time.</li>
-          <li style="margin:5px 0;">Shows Bitcoin halving dates, block rewards, supply at each halving, and annual issuance rates.</li>
-          <li style="margin:5px 0;">Projects USD M2 to $85 trillion by 2050 while Bitcoin approaches its fixed 21 million supply.</li>
+          <li style="margin:5px 0;">Charts US dollar M2 next to Bitcoin's circulating supply and its 21 million maximum, from 1960 to a horizon you choose.</li>
+          <li style="margin:5px 0;">Compounds the dollar side at an annual growth rate you set with a slider, instead of a single fixed forecast.</li>
+          <li style="margin:5px 0;">Reports the money supply per bitcoin at the chosen horizon and how it compares with today.</li>
+          <li style="margin:5px 0;">Counts the dollars created and the bitcoin mined since the page was opened, including their BTC-equivalent ratio.</li>
+          <li style="margin:5px 0;">Compares dollar creation with Bitcoin mining at second, daily and yearly scales.</li>
+          <li style="margin:5px 0;">Plots the Truflation CPI series, Bitcoin circulation growth and Bitcoin's dollar price across time.</li>
+          <li style="margin:5px 0;">Lists Bitcoin halving dates, block rewards, supply at each halving and annual issuance rates.</li>
         </ul>
         <a href="https://bitsofknowledge.de" style="color:#F7931A;font-size:15px;font-weight:700;text-decoration:none;">Explore more tools from Bits of Knowledge</a>
         <section aria-label="Frequently asked questions" style="margin-top:28px;padding-top:18px;border-top:1px solid #E2E8F0;">
           <h2 style="font-family:'Plus Jakarta Sans',Inter,sans-serif;font-weight:800;font-size:20px;letter-spacing:-0.02em;margin:0 0 12px;">Frequently asked questions</h2>
-          <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">What is fiatAtScale showing me?</h3>
-          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">Dollar money-supply expansion set against Bitcoin&#x27;s fixed 21 million cap. A live counter estimates how many dollars have been created and how much Bitcoin has been mined since you opened the page, alongside the ratio between them.</p>
+          <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">What does fiatAtScale show me?</h3>
+          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">How far the US dollar money supply runs ahead of Bitcoin&#x27;s fixed 21 million cap. You set the chart window and an annual M2 growth rate; the chart replots both supplies and reports how much money supply exists per bitcoin at the chosen horizon. A live counter adds the dollars created and the bitcoin mined since you opened the page.</p>
           <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">What is M2 and why use it?</h3>
           <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">M2 is a broad measure of the US money supply covering cash, deposits and easily accessible savings. It is the standard yardstick for how much money exists, which makes it the fair comparison against Bitcoin&#x27;s supply schedule.</p>
           <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">Where does the data come from?</h3>
-          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">US money-supply figures come from FRED, the Federal Reserve&#x27;s public data service. Bitcoin&#x27;s supply follows the protocol&#x27;s fixed issuance schedule, and the inflation view uses Truflation CPI.</p>
-          <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">What does the projection to 2050 assume?</h3>
-          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">It extends the historical M2 trend to roughly $85 trillion by 2050 while Bitcoin approaches its 21 million limit. The dollar side is a trend extrapolation and could be wrong. The Bitcoin side is defined by the protocol and is the only genuinely fixed number in the chart.</p>
+          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">US money-supply figures come from FRED, the Federal Reserve&#x27;s public data service. Bitcoin&#x27;s supply follows the protocol&#x27;s fixed issuance schedule. The inflation section uses a static annual series of the Truflation US CPI index next to the official BLS CPI; the live bitcoin price comes from the Bits of Knowledge price service.</p>
+          <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">Is the projection a forecast?</h3>
+          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">No. Everything past the last reported year is a scenario you control with the growth slider: the dollar supply is compounded at the rate you pick, which could be wrong in either direction. The Bitcoin side is not a scenario — it follows the protocol&#x27;s issuance schedule and is the only genuinely fixed number in the chart.</p>
           <h3 style="font-size:15px;font-weight:700;margin:14px 0 4px;">Why do the halving details matter here?</h3>
-          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">Because they are the mechanism behind the flattening supply curve. Every four years Bitcoin&#x27;s issuance rate halves, so the chart shows the dates, block rewards and annual issuance rates that produce it.</p>
+          <p style="margin:0;color:#64748B;font-size:14px;line-height:1.6;">Because they are the mechanism behind the flattening supply curve. Every four years Bitcoin&#x27;s issuance rate halves, so the page lists the dates, block rewards and annual issuance rates that produce it.</p>
         </section>
         <nav aria-label="More Bits of Knowledge tools" style="margin-top:24px;padding-top:16px;border-top:1px solid #E2E8F0;font-size:14px;color:#64748B;">More BoK tools: <a href="https://bitcoindcaplan.com/" style="color:#F7931A;text-decoration:none;">Bitcoin DCA Plan</a> &middot; <a href="https://bitcointaxmap.com/" style="color:#F7931A;text-decoration:none;">Bitcoin Tax Map</a> &middot; <a href="https://bitcoinrealath.com/" style="color:#F7931A;text-decoration:none;">Real Bitcoin ATH</a> &middot; <a href="https://bitcoinminingroi.com/" style="color:#F7931A;text-decoration:none;">Bitcoin Mining ROI</a> &middot; <a href="https://bitcoinlivingstandard.com/" style="color:#F7931A;text-decoration:none;">Bitcoin Living Standard</a></nav>
       </main>
+      </div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
