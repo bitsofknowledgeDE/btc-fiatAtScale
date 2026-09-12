@@ -11,8 +11,6 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
   },
   "dependencies": {
-    "@fontsource/geist-sans": "^5.2.5",
-    "@fontsource/jetbrains-mono": "^5.2.8",
     "@supabase/supabase-js": "^2.57.4",
     "framer-motion": "^12.40.0",
     "lucide-react": "^0.344.0",
