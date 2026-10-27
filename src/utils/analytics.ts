@@ -17,6 +17,25 @@ export function trackEmailSignup(language: string) {
   window.plausible?.('E-Mail-Signup', { props: { language } });
 }
 
+// Tool-Interaktion counts real use: nothing is sent before the visitor's first
+// gesture (effects that run on load or when live data arrives are not use), and
+// each tool + action is sent at most once per page view.
+let hasGesture = false;
+const sentToolActions = new Set<string>();
+
+if (typeof window !== 'undefined') {
+  const markGesture = () => {
+    hasGesture = true;
+  };
+  for (const type of ['pointerdown', 'keydown', 'wheel', 'touchstart']) {
+    window.addEventListener(type, markGesture, { capture: true, once: true, passive: true });
+  }
+}
+
 export function trackToolInteraction(tool: string, action = 'run') {
+  if (!hasGesture) return;
+  const key = `${tool}:${action}`;
+  if (sentToolActions.has(key)) return;
+  sentToolActions.add(key);
   window.plausible?.('Tool-Interaktion', { props: { tool, action } });
 }
